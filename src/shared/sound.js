@@ -51,6 +51,9 @@ export function createSound({ muted = false } = {}) {
     win: () => [523, 659, 784, 1047].forEach((f, i) => tone({ freq: f, start: i * 0.11, dur: 0.2, type: 'triangle', gain: 0.12 })),
     lose: () => [392, 330, 262].forEach((f, i) => tone({ freq: f, start: i * 0.14, dur: 0.22, type: 'triangle', gain: 0.1 })),
     draw: () => [440, 440].forEach((f, i) => tone({ freq: f, start: i * 0.16, dur: 0.16, type: 'sine', gain: 0.09 })),
+    // Wooden tick for a dropped seed. `step` raises the pitch a little so counting is audible.
+    seed: (step = 0) => tone({ freq: 360 + Math.min(step, 12) * 22, slideTo: 300 + Math.min(step, 12) * 18, dur: 0.07, type: 'triangle', gain: 0.1 }),
+    pick: () => tone({ freq: 260, slideTo: 340, dur: 0.09, type: 'sine', gain: 0.09 }),
     success: () => [660, 880].forEach((f, i) => tone({ freq: f, start: i * 0.09, dur: 0.14, type: 'triangle', gain: 0.1 })),
   };
 
@@ -65,9 +68,9 @@ export function createSound({ muted = false } = {}) {
     get muted() {
       return isMuted;
     },
-    play(name) {
+    play(name, arg) {
       const fn = SOUNDS[name];
-      if (fn) fn();
+      if (fn) fn(arg);
     },
   };
 }

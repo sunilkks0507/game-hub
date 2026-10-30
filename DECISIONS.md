@@ -40,6 +40,43 @@ Three lines each: what, why, date.
   Matches the historical shatranj tradition. Counter-bare-king draw is left out for simplicity.
   30 Oct 2026
 
+## Second game: Pallanguzhi
+- **Game choice:** Pallanguzhi (catalogue #27), the traditional South Indian seed-sowing game. Chosen by Sunil from three options.
+  Best India fit (26/30), reuses the engine + Worker bot pattern, and teaches counting ahead.
+  30 Oct 2026
+
+- **Category:** Explorers (7-14), also Challengers and Family. Mascot Bija, an original seed character.
+  Modes: vs computer (Easy/Medium/Hard) and two players on one phone. No online play.
+  30 Oct 2026
+
+- **Rule set (default, confirm):** "Simple classic": 7 pits each, 5 seeds per pit, sow counter-clockwise, relay when the next pit is full, capture the pit after an empty pit, one game with no refill rounds.
+  Regional versions differ (start seeds, capture, refill rounds). Full rules in `src/games/pallanguzhi/MASTER_SPEC.md` section 6 and on the "?" card. Confirm or change before child-testing.
+  30 Oct 2026
+
+- **Game end and safety limits:** the game ends when the player to move has no seeds; leftover seeds go to the row's owner. Also ends after 60 turns with no capture, and a relay chain stops after 300 relays.
+  Stops endless games. Never seen in 150 random playouts, but the limits keep the game from getting stuck.
+  30 Oct 2026
+
+- **Bot levels:** Easy plays a random pit 40% of the time, otherwise greedy; Medium looks 3 moves ahead; Hard looks up to 7 moves ahead within 1.5 s.
+  Tests show Medium and Hard beat a random player; Easy sometimes loses so a child can win.
+  30 Oct 2026
+
+- **Slow sowing, with a speed-up:** seeds drop one by one with a running count (the learning goal is counting). Tapping the board speeds it up, long chains speed up on their own, and reduce motion skips it.
+  Keeps the counting visible without making long relay chains tedious.
+  30 Oct 2026
+
+- **Grown-up gate:** a simple addition question (for example 12 + 27) in front of the "For grown-ups" corner.
+  Works with keyboard and screen readers, unlike press-and-hold. The corner has no external links.
+  30 Oct 2026
+
+- **No separate mockup file:** the real screens were built directly and checked at 360px with screenshots.
+  The game is small enough that a throwaway mockup would duplicate the work. Sunil asked for the full game in one go.
+  30 Oct 2026
+
+- **Shared sound:** added `seed` and `pick` sounds to `src/shared/sound.js`; `play(name, arg)` now passes an optional argument.
+  Existing sounds are unchanged, so Chaturanga is not affected.
+  30 Oct 2026
+
 ## Watching real players
 Notes from watching a new player try each game go here (Step 7 of the workflow).
 
