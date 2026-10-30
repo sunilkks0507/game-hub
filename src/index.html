@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Game Hub</title>
+  <meta name="description" content="Small offline thinking games for children and adults. No ads, no accounts, no tracking.">
+  <meta name="theme-color" content="#8c3b1e">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="shared/tokens.css">
+  <link rel="stylesheet" href="shared/base.css">
+  <link rel="stylesheet" href="hub/hub.css">
+</head>
+<body>
+  <header class="hub-header">
+    <img class="hub-logo" src="icons/icon-192.png" alt="" width="48" height="48">
+    <div>
+      <h1>Game Hub</h1>
+      <p class="hub-tagline">Small thinking games. Works offline. No ads, no accounts.</p>
+    </div>
+  </header>
+
+  <main>
+    <nav aria-label="Game categories">
+      <div id="tabs" class="tabs" role="tablist" aria-label="Choose a category"></div>
+    </nav>
+    <section id="games" class="games" role="tabpanel" aria-live="polite">
+      <p class="hub-note">Loading games…</p>
+    </section>
+  </main>
+
+  <footer class="hub-footer">
+    <p>Everything stays on this device. Nothing is collected.</p>
+    <p><a href="privacy.html">Privacy</a></p>
+  </footer>
+
+  <script type="module" src="hub/hub.js"></script>
+</body>
+</html>

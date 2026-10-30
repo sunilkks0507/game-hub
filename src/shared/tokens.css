@@ -1,0 +1,23 @@
+/* Game Hub design tokens. Each game overrides only --accent (and --accent-text if needed). */
+:root {
+  --bg: #faf7f2;
+  --surface: #ffffff;
+  --text: #1f1a17;
+  --text-muted: #5c524b;
+  --line: #d9cfc4;
+  --accent: #8c3b1e;
+  --accent-text: #ffffff;
+  --ok: #1b6e3a;
+  --warn: #8a5a00;
+  --danger: #a3221b;
+  --focus: #1d4ed8;
+  --radius: 12px;
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --tap: 44px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}

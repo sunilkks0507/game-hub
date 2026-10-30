@@ -42,3 +42,12 @@ Three lines each: what, why, date.
 
 ## Watching real players
 Notes from watching a new player try each game go here (Step 7 of the workflow).
+
+## 2026-10-30 Precache everything
+The hub precaches the shell and every game on first load (about 30 files, well under 1 MB), so a game works offline immediately. Revisit with a "Download for offline" button once games get large.
+
+## 2026-10-30 One game, two categories
+Chaturanga is listed under Adults, and also shows under Challengers and Family via `alsoIn` in game.json.
+
+## 2026-10-30 Coordinate letters on the board
+The small a-h and 1-8 labels on the board edge are decorative and hidden from screen readers. They are an exception to the 16px text rule because they sit inside squares.

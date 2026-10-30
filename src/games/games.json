@@ -1,0 +1,38 @@
+[
+  {
+    "id": "chaturanga",
+    "name": "Chaturanga",
+    "tagline": "The ancient game of kings",
+    "category": "adults",
+    "alsoIn": [
+      "challengers",
+      "family"
+    ],
+    "ageMin": 11,
+    "ageMax": 99,
+    "skills": [
+      "strategy",
+      "planning",
+      "calculation"
+    ],
+    "players": "1-2",
+    "minutesPerSession": 15,
+    "accent": "#8C3B1E",
+    "icon": "icon.svg",
+    "entry": "index.html",
+    "version": "0.1.0",
+    "goal": "Trap the enemy Raja so it cannot escape.",
+    "howToWin": "Checkmate the enemy Raja, stalemate it, or capture every other enemy piece.",
+    "controls": "tap",
+    "difficulty": [
+      "easy",
+      "medium",
+      "hard"
+    ],
+    "ruleVariant": "Shatranj-style: no queen or bishop, no castling, no pawn double step, stalemate is a win.",
+    "about": "Chaturanga is the Indian ancestor of chess, played over 1,400 years ago.",
+    "tutorialSteps": 5,
+    "mascot": "emblem-ratha",
+    "path": "games/chaturanga/"
+  }
+]
