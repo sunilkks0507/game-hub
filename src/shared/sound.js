@@ -55,6 +55,14 @@ export function createSound({ muted = false } = {}) {
     seed: (step = 0) => tone({ freq: 360 + Math.min(step, 12) * 22, slideTo: 300 + Math.min(step, 12) * 18, dur: 0.07, type: 'triangle', gain: 0.1 }),
     pick: () => tone({ freq: 260, slideTo: 340, dur: 0.09, type: 'sine', gain: 0.09 }),
     success: () => [660, 880].forEach((f, i) => tone({ freq: f, start: i * 0.09, dur: 0.14, type: 'triangle', gain: 0.1 })),
+    // A pencil line being drawn.
+    line: () => tone({ freq: 330, slideTo: 250, dur: 0.07, type: 'triangle', gain: 0.12 }),
+    // A box closes. `step` (boxes closed so far this turn) raises the pitch, so a long run sounds like a rising scale.
+    box: (step = 0) => {
+      const base = 520 + Math.min(step, 8) * 60;
+      tone({ freq: base, dur: 0.1, type: 'triangle', gain: 0.11 });
+      tone({ freq: base * 1.5, start: 0.07, dur: 0.14, type: 'triangle', gain: 0.1 });
+    },
   };
 
   return {

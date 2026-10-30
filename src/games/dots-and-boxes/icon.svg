@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Bindu, a friendly dot with a pencil">
+  <title>Bindu, a friendly dot with a pencil</title>
+  <rect width="512" height="512" rx="112" fill="#2f55a4"/>
+  <ellipse cx="256" cy="448" rx="120" ry="18" fill="#1d3a75" opacity="0.55"/>
+  <circle cx="256" cy="288" r="166" fill="#eef3ff" stroke="#1f2f5a" stroke-width="14"/>
+  <g transform="rotate(32 380 120)">
+    <rect x="352" y="40" width="46" height="130" rx="6" fill="#f4c84a" stroke="#1f2f5a" stroke-width="12"/>
+    <polygon points="352,170 398,170 375,214" fill="#e9b872" stroke="#1f2f5a" stroke-width="12" stroke-linejoin="round"/>
+    <polygon points="366,198 384,198 375,214" fill="#1f2f5a"/>
+  </g>
+  <circle cx="204" cy="268" r="24" fill="#3a2a20"/>
+  <circle cx="308" cy="268" r="24" fill="#3a2a20"/>
+  <circle cx="213" cy="259" r="8" fill="#ffffff"/>
+  <circle cx="317" cy="259" r="8" fill="#ffffff"/>
+  <circle cx="156" cy="326" r="22" fill="#f29c7e" opacity="0.75"/>
+  <circle cx="356" cy="326" r="22" fill="#f29c7e" opacity="0.75"/>
+  <path d="M212 332 Q256 384 300 332" fill="none" stroke="#3a2a20" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="206" cy="396" r="9" fill="#1f2f5a"/>
+  <circle cx="306" cy="396" r="9" fill="#1f2f5a"/>
+</svg>

@@ -44,7 +44,8 @@ Terms: a *third side* is a box with 3 sides drawn after a move. A *safe line* is
 - **Hard:** Medium plus chain control: counts chains and loops, and may decline the last two boxes of a long chain ("double-deal") to keep the move. Searches exact turns (a turn = box takes plus one final line) with iterative deepening inside a 1.5 s budget, falling back to Medium's choice if time runs out.
 - Bots are pure functions of `(state, level, rng)`, run in a Web Worker, and fall back to inline calls if Workers are unavailable. Seeded RNG makes tests repeatable.
 - **Hint:** vs computer only. Uses Medium logic: shows an available box if there is one, otherwise a safe line, otherwise says "Every line gives a box away. Pick the smallest gift."
-- **Safe-line helper (setting):** marks lines that would create a third side with a small "!" badge. Default on for Easy, off for Medium and Hard.
+- **Safe-line helper (setting):** marks lines that would create a third side with a small "!" badge. Setting is Auto (on for Easy only, the default), Always or Never.
+- **Hard (as built):** plays like Medium until 19 lines are left, then solves the rest of the game exactly within 1.5 s (this includes double-dealing), falling back to Medium if time runs out.
 
 ## 8. Screen flow
 Title (Bindu, name, goal, Play, How to play, sound, Settings, Home) -> first Play runs the tutorial -> Setup (opponent: computer or friend; board size; level; who starts on 3x3) -> Play -> Result dialog (why, stats, badges, Play again / How to play / Home).
@@ -87,7 +88,7 @@ Offers Play again, How to play, Home.
 First box, First win, Beat the Hard bot, Win on 5x5, Run of 4+ boxes in one turn, Clean win (win without giving away a box).
 
 ## 14. Files (planned)
-`index.html`, `css/style.css`, `js/engine.js`, `js/chains.js` (chain and loop analysis), `js/ai.js`, `js/ai.worker.js`, `js/board.js` (SVG), `js/tutorial.js`, `js/app.js`, `icon.svg`, `game.json`, `tests/engine.test.js`, `tests/ai.test.js`, `tests/tutorial.test.js`. Accent colour `#2f55a4`; player 1 tint `#b4540a`.
+`index.html`, `css/style.css`, `js/engine.js`, `js/ai.js` (includes `cascadeSize`; no separate chains file), `js/ai.worker.js`, `js/board.js` (SVG), `js/tutorial.js`, `js/app.js`, `icon.svg`, `game.json`, `tests/engine.test.js`, `tests/ai.test.js`, `tests/tutorial.test.js`. Accent colour `#2f55a4`; player 1 tint `#b4540a`.
 
 ## 15. Done means
 - [ ] Engine rules match section 6; tests pass (`node --test`)

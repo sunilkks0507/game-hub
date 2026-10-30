@@ -1,5 +1,5 @@
 {
-  "version": "b4e593048a",
+  "version": "cb434c2478",
   "files": [
     "./",
     "games/chaturanga/css/style.css",
@@ -13,6 +13,16 @@
     "games/chaturanga/js/engine.js",
     "games/chaturanga/js/pieces.js",
     "games/chaturanga/js/tutorial.js",
+    "games/dots-and-boxes/css/style.css",
+    "games/dots-and-boxes/game.json",
+    "games/dots-and-boxes/icon.svg",
+    "games/dots-and-boxes/index.html",
+    "games/dots-and-boxes/js/ai.js",
+    "games/dots-and-boxes/js/ai.worker.js",
+    "games/dots-and-boxes/js/app.js",
+    "games/dots-and-boxes/js/board.js",
+    "games/dots-and-boxes/js/engine.js",
+    "games/dots-and-boxes/js/tutorial.js",
     "games/games.json",
     "games/pallanguzhi/css/style.css",
     "games/pallanguzhi/game.json",

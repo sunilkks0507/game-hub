@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Dots and Boxes</title>
+  <meta name="description" content="Dots and Boxes, the classic pencil game. Play the computer or a friend. Free, offline, no ads.">
+  <meta name="theme-color" content="#2f55a4">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../shared/tokens.css">
+  <link rel="stylesheet" href="../../shared/base.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <main id="app">
+
+    <!-- Title screen -->
+    <section id="screen-title" class="screen title-screen" aria-labelledby="title-heading">
+      <img class="mascot" src="icon.svg" alt="" width="112" height="112">
+      <h1 id="title-heading">Dots and Boxes</h1>
+      <p class="tagline">Draw a line, close a box</p>
+      <p class="goal-sentence">Close more boxes than your rival.</p>
+      <div class="title-actions">
+        <button id="btn-play" class="btn btn-primary btn-block" type="button">Play</button>
+        <button id="btn-continue" class="btn btn-block" type="button" hidden>Continue your game</button>
+        <button id="btn-howto" class="btn btn-block" type="button">How to play</button>
+        <div class="row">
+          <button id="btn-sound" class="btn btn-quiet" type="button" aria-pressed="true">Sound: on</button>
+          <button id="btn-settings" class="btn btn-quiet" type="button">Settings</button>
+          <a class="btn btn-quiet" href="../../" id="link-home">Home</a>
+        </div>
+      </div>
+      <p class="fine-print">Free. Works offline. Nothing is collected.</p>
+    </section>
+
+    <!-- Setup screen -->
+    <section id="screen-setup" class="screen setup-screen" aria-labelledby="setup-heading" hidden>
+      <h1 id="setup-heading">New game</h1>
+      <form id="setup-form" class="setup-form">
+        <fieldset>
+          <legend>Who are you playing?</legend>
+          <label class="choice"><input type="radio" name="mode" value="cpu" checked> <span>The computer</span></label>
+          <label class="choice"><input type="radio" name="mode" value="two"> <span>A friend on this phone</span></label>
+        </fieldset>
+        <fieldset>
+          <legend>Board size</legend>
+          <label class="choice"><input type="radio" name="size" value="3" checked> <span>Small, 3 by 3 <small>about 4 minutes</small></span></label>
+          <label class="choice"><input type="radio" name="size" value="4"> <span>Medium, 4 by 4 <small>about 8 minutes</small></span></label>
+          <label class="choice"><input type="radio" name="size" value="5"> <span>Large, 5 by 5 <small>about 15 minutes</small></span></label>
+        </fieldset>
+        <fieldset id="fs-level">
+          <legend>Computer level</legend>
+          <label class="choice"><input type="radio" name="level" value="easy"> <span>Easy <small>makes mistakes</small></span></label>
+          <label class="choice"><input type="radio" name="level" value="medium" checked> <span>Medium <small>never gives boxes away for free</small></span></label>
+          <label class="choice"><input type="radio" name="level" value="hard"> <span>Hard <small>plans the whole ending</small></span></label>
+        </fieldset>
+        <fieldset id="fs-first">
+          <legend>Who goes first?</legend>
+          <label class="choice"><input type="radio" name="first" value="0" checked> <span>You</span></label>
+          <label class="choice"><input type="radio" name="first" value="1"> <span>The computer</span></label>
+          <small id="first-note" class="fine-print left"></small>
+        </fieldset>
+        <div class="setup-actions">
+          <button id="btn-start" class="btn btn-primary btn-block" type="submit">Start game</button>
+          <button id="btn-setup-back" class="btn btn-quiet btn-block" type="button">Back</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Play screen -->
+    <section id="screen-play" class="screen play-screen" aria-label="Game" hidden>
+      <header class="play-header">
+        <button id="btn-menu" class="btn btn-quiet" type="button" aria-haspopup="dialog">Menu</button>
+        <h1 class="play-title">Dots and Boxes</h1>
+        <button id="btn-rules" class="btn btn-quiet icon-btn" type="button" aria-label="Rules">?</button>
+      </header>
+      <p class="goal-line">Goal: close more boxes than your rival.</p>
+      <div class="scoreboard">
+        <div id="score-0" class="score s0"><span class="mark" aria-hidden="true">&#9679;</span><span class="score-name"></span><span class="score-count"></span></div>
+        <div id="score-1" class="score s1"><span class="mark" aria-hidden="true">&#9670;</span><span class="score-name"></span><span class="score-count"></span></div>
+      </div>
+      <div id="status" class="status" role="status" aria-live="polite"></div>
+      <div id="board" class="board-wrap"></div>
+      <p id="last-move" class="last-move-line"></p>
+      <div class="play-controls">
+        <button id="btn-undo" class="btn btn-quiet" type="button">Undo</button>
+        <button id="btn-hint" class="btn btn-quiet" type="button">Hint</button>
+      </div>
+    </section>
+
+    <!-- Tutorial screen -->
+    <section id="screen-tutorial" class="screen tutorial-screen" aria-label="How to play" hidden>
+      <header class="tutorial-header">
+        <div>
+          <p id="tut-step-label" class="tutorial-step"></p>
+          <div id="tut-dots" class="dots-row" aria-hidden="true"></div>
+        </div>
+        <button id="btn-tut-skip" class="btn btn-quiet" type="button">Skip</button>
+      </header>
+      <div class="guide">
+        <img class="guide-mark" src="icon.svg" alt="" width="52" height="52">
+        <div class="guide-bubble">
+          <p id="tut-text" class="tutorial-text" tabindex="-1"></p>
+        </div>
+      </div>
+      <div id="tut-board" class="board-wrap"></div>
+      <p class="tut-score"><strong id="tut-score">Your boxes: 0</strong></p>
+      <p id="tut-feedback" class="tutorial-feedback" role="status" aria-live="polite"></p>
+      <div class="tutorial-actions">
+        <button id="btn-tut-next" class="btn btn-primary btn-block" type="button" disabled>Next</button>
+        <div id="tut-practice" hidden>
+          <button id="btn-tut-practice" class="btn btn-primary btn-block" type="button">Start practice game</button>
+          <button id="btn-tut-finish" class="btn btn-quiet btn-block" type="button">Not now</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Menu -->
+  <dialog id="dlg-menu" aria-labelledby="menu-title">
+    <h2 id="menu-title">Menu</h2>
+    <div class="stack">
+      <button id="menu-howto" class="btn btn-block" type="button">How to play</button>
+      <button id="menu-settings" class="btn btn-block" type="button">Settings</button>
+      <button id="menu-new" class="btn btn-block" type="button">New game</button>
+      <button id="menu-resign" class="btn btn-danger btn-block" type="button">Give up this game</button>
+      <a class="btn btn-block" href="../../">Home</a>
+      <button id="menu-close" class="btn btn-quiet btn-block" type="button">Back to the game</button>
+    </div>
+  </dialog>
+
+  <!-- Rules card -->
+  <dialog id="dlg-rules" aria-labelledby="rules-title">
+    <h2 id="rules-title">Rules</h2>
+    <p><strong>Goal.</strong> Close more boxes than your rival.</p>
+    <p><strong>Your turn.</strong> Draw one line between two dots. Tap a dotted line to draw it.</p>
+    <p><strong>Close a box.</strong> If your line is the fourth side of a box, the box is yours and you go again. Close two boxes with one line and you get both.</p>
+    <p><strong>No box closed?</strong> Then it is your rival's turn.</p>
+    <p><strong>The game ends</strong> when every line is drawn. Most boxes wins.</p>
+    <p class="rules-variant"><strong>Rule set.</strong> Classic Dots and Boxes. You may leave a box open on purpose, but you must always draw a line. 3 by 3 and 5 by 5 boards can never end in a tie.</p>
+    <p><strong>Tip.</strong> A box with three sides is a gift: your rival can close it. Draw safe lines first.</p>
+    <div class="dialog-actions"><button id="rules-close" class="btn btn-primary" type="button">Got it</button></div>
+  </dialog>
+
+  <!-- Settings -->
+  <dialog id="dlg-settings" aria-labelledby="settings-title">
+    <h2 id="settings-title">Settings</h2>
+    <div class="stack">
+      <label class="choice"><input id="set-sound" type="checkbox"> <span>Sound</span></label>
+      <label class="choice"><input id="set-motion" type="checkbox"> <span>Reduce motion</span></label>
+      <label class="field">Warn me about lines that give a box away
+        <select id="set-helper">
+          <option value="auto">Only on Easy (recommended)</option>
+          <option value="on">Always</option>
+          <option value="off">Never</option>
+        </select>
+      </label>
+      <label class="field">Computer level for new games
+        <select id="set-level">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </label>
+      <button id="set-grownups" class="btn btn-block" type="button">For grown-ups</button>
+      <button id="set-reset" class="btn btn-danger btn-block" type="button">Reset my scores and badges</button>
+    </div>
+    <div class="dialog-actions"><button id="settings-close" class="btn btn-primary" type="button">Done</button></div>
+  </dialog>
+
+  <!-- Grown-up gate -->
+  <dialog id="dlg-gate" aria-labelledby="gate-title">
+    <h2 id="gate-title">Grown-ups only</h2>
+    <form id="gate-form" class="stack" method="dialog">
+      <label class="field"><span id="gate-question"></span>
+        <input id="gate-answer" type="number" inputmode="numeric" autocomplete="off" required>
+      </label>
+      <p id="gate-msg" class="gate-msg" role="status"></p>
+      <div class="dialog-actions">
+        <button id="gate-cancel" class="btn btn-quiet" type="button">Cancel</button>
+        <button class="btn btn-primary" type="submit">Continue</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Grown-up corner -->
+  <dialog id="dlg-grownups" aria-labelledby="grownups-title">
+    <h2 id="grownups-title">For grown-ups</h2>
+    <p><strong>What it teaches.</strong> Planning ahead and spotting what a move will allow. Children learn to avoid drawing a third side, and later to count chains.</p>
+    <p><strong>Age.</strong> Made for ages 7 and up, and enjoyed by adults. A game takes 4 to 15 minutes.</p>
+    <p><strong>Privacy.</strong> Works offline. No ads, no accounts, no tracking. Scores and badges stay on this device only.</p>
+    <p><a href="../../privacy.html">Read the privacy note</a></p>
+    <div class="dialog-actions"><button id="grownups-close" class="btn btn-primary" type="button">Close</button></div>
+  </dialog>
+
+  <!-- Result -->
+  <dialog id="dlg-result" aria-labelledby="result-title">
+    <h2 id="result-title"></h2>
+    <p id="result-score" class="result-score"></p>
+    <p id="result-why"></p>
+    <p id="result-stats" class="result-stats"></p>
+    <ul id="result-badges" class="badge-list"></ul>
+    <div class="dialog-actions">
+      <button id="btn-again" class="btn btn-primary" type="button">Play again</button>
+      <button id="btn-result-howto" class="btn" type="button">How to play</button>
+      <a class="btn btn-quiet" href="../../">Home</a>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
