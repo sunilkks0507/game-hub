@@ -44,3 +44,9 @@ test('no source file loads anything from an external website', () => {
   walk(SRC);
   assert.deepEqual(bad, []);
 });
+
+test('sw.js carries a build stamp so installed copies update when games change', async () => {
+  await build();
+  const sw = readFileSync(join(SRC, 'sw.js'), 'utf8');
+  assert.match(sw, /^\/\/ BUILD [0-9a-f]{10} /m);
+});

@@ -91,3 +91,9 @@ The small a-h and 1-8 labels on the board edge are decorative and hidden from sc
 
 ## 2026-10-30 Verified
 Live at https://sunilkks0507.github.io/game-hub/. 51 tests pass and gate the deploy. 29 files precached; offline reload and tutorial board checked in Chromium. 360px layout has no horizontal scroll. Not yet tested on a real phone.
+
+## 2026-10-30 Service worker must change to update
+Found while checking the live site: sw.js never changed between deploys, so a browser that already had the hub kept its old game list and never saw Pallanguzhi. The build now stamps a fingerprint line into sw.js, so every content change makes browsers reinstall. A test checks the stamp.
+
+## 2026-10-30 Verified (Pallanguzhi)
+Live at https://sunilkks0507.github.io/game-hub/games/pallanguzhi/index.html. 81 tests pass and gate the deploy. In Chromium at 360px: no horizontal scroll, tutorial, full game vs computer, two-player, undo, hint, give up, grown-up gate, continue after reload, and offline play all worked with no console errors. Live hub list and game page confirmed after clearing the old cache. NOT tested: a real phone, a real child (Step 7 stays unticked), the update path for a browser holding the old service worker (fixed above, check after deploy).

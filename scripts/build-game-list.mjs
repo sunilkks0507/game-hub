@@ -55,6 +55,21 @@ export function readGames(srcDir = SRC) {
   return games;
 }
 
+// Browsers only reinstall a service worker when sw.js itself changes. So the build writes a
+// fingerprint of every other file into sw.js; a new game then updates installed copies.
+export function stampServiceWorker(srcDir = SRC) {
+  const swPath = join(srcDir, 'sw.js');
+  const hash = createHash('sha1');
+  for (const f of walk(srcDir).filter((f) => !SKIP_FILE(f) && f !== swPath).map((f) => relative(srcDir, f)).sort()) {
+    hash.update(f);
+    hash.update(readFileSync(join(srcDir, f)));
+  }
+  const line = `// BUILD ${hash.digest('hex').slice(0, 10)} (written by scripts/build-game-list.mjs; do not edit)`;
+  const text = readFileSync(swPath, 'utf8');
+  const next = /^\/\/ BUILD .*$/m.test(text) ? text.replace(/^\/\/ BUILD .*$/m, line) : text.trimEnd() + '\n\n' + line + '\n';
+  if (next !== text) writeFileSync(swPath, next);
+}
+
 export function buildPrecache(srcDir = SRC) {
   const files = walk(srcDir)
     .filter((f) => !SKIP_FILE(f))
@@ -72,6 +87,7 @@ export function buildPrecache(srcDir = SRC) {
 export function build(srcDir = SRC) {
   const games = readGames(srcDir);
   writeFileSync(join(srcDir, 'games', 'games.json'), JSON.stringify(games, null, 2) + '\n');
+  stampServiceWorker(srcDir);
   const precache = buildPrecache(srcDir);
   writeFileSync(join(srcDir, 'precache.json'), JSON.stringify(precache, null, 2) + '\n');
   return { games, precache };

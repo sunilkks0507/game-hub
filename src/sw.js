@@ -57,3 +57,5 @@ self.addEventListener('fetch', (event) => {
     })(),
   );
 });
+
+// BUILD bc4d106d20 (written by scripts/build-game-list.mjs; do not edit)
