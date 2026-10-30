@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dots and Boxes: mockup (Step 3)</title>
+<style>
+/* ---- Shared hub tokens (copied from src/shared/tokens.css); Dots and Boxes overrides only the accent ---- */
+:root {
+  --bg: #faf7f2; --surface: #ffffff; --text: #1f1a17; --text-muted: #5c524b; --line: #d9cfc4;
+  --accent: #2f55a4; --accent-text: #ffffff;
+  --ok: #1b6e3a; --warn: #8a5a00; --danger: #a3221b; --focus: #1d4ed8;
+  --radius: 12px; --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px; --space-6: 32px;
+  --tap: 44px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Game-only colours */
+  --p0: #2f55a4; --p0-tint: #dbe5f7;
+  --p1: #b4540a; --p1-tint: #fbe3cf;
+  --glow: #ffb300;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: #e6e0d6; color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.5; padding: 16px; }
+h1.page { font-size: 1.3rem; margin: 0 0 4px; }
+p.lead { margin: 0 0 16px; color: var(--text-muted); max-width: 70ch; }
+.frames { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+figure { margin: 0; }
+figcaption { font-weight: 700; margin-bottom: 6px; }
+figcaption small { display: block; font-weight: 400; color: var(--text-muted); }
+.phone { width: 360px; min-height: 640px; background: var(--bg); border: 2px solid #1f1a17; border-radius: 22px; overflow: hidden; position: relative; }
+h1, h2 { line-height: 1.2; margin: 0 0 var(--space-2); }
+p { margin: 0 0 var(--space-3); }
+
+/* Buttons (from base.css) */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--tap); min-width: var(--tap); padding: 0 16px;
+  border: 2px solid var(--accent); border-radius: var(--radius); background: var(--surface); color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; }
+.btn-primary { background: var(--accent); color: var(--accent-text); }
+.btn-quiet { border-color: var(--line); color: var(--text); }
+.btn-block { display: flex; width: 100%; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.row .btn { flex: 1 1 auto; }
+
+/* Title */
+.title-screen { display: flex; flex-direction: column; align-items: center; padding: 40px 16px 24px; text-align: center; }
+.title-screen h1 { font-size: 2rem; margin-bottom: 4px; }
+.tagline { color: var(--text-muted); margin-bottom: 12px; }
+.goal-sentence { font-size: 1.1rem; font-weight: 600; margin-bottom: 24px; }
+.title-actions { display: grid; gap: 8px; width: 100%; }
+.fine-print { margin-top: 24px; color: var(--text-muted); font-size: 0.95rem; }
+
+/* Play */
+.play-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; }
+.play-title { margin: 0; font-size: 1.15rem; }
+.goal-line { margin: 0; padding: 0 16px; color: var(--text-muted); text-align: center; }
+.score { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 16px 0; }
+.who { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border: 2px solid var(--line); border-radius: var(--radius); background: var(--surface); font-weight: 700; }
+.who .mark { flex: none; }
+.who .count { margin-left: auto; font-size: 1.5rem; line-height: 1.2; }
+.who.turn { border-width: 3px; border-color: var(--accent); }
+.who.turn.p1 { border-color: var(--p1); }
+.who.turn .name::before { content: '\25B6\00a0'; }
+.status { margin: 8px 16px; min-height: var(--tap); display: flex; align-items: center; justify-content: center; border-radius: var(--radius); background: var(--surface); border: 2px solid var(--line); font-weight: 700; text-align: center; padding: 4px 8px; }
+.board-wrap { padding: 0 16px; }
+svg.board { display: block; width: 328px; height: 328px; }
+.controls { display: flex; gap: 8px; padding: 12px 16px 0; }
+.controls .btn { flex: 1 1 0; }
+
+/* Mascot bubble */
+.bubble-row { display: flex; align-items: flex-end; gap: 10px; padding: 8px 16px; }
+.bubble { position: relative; flex: 1; background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius); padding: 8px 12px; font-weight: 600; }
+.bubble::before { content: ''; position: absolute; left: -9px; bottom: 14px; width: 14px; height: 14px; background: var(--surface); border-left: 2px solid var(--line); border-bottom: 2px solid var(--line); transform: rotate(45deg); }
+.steps { display: flex; gap: 6px; justify-content: center; padding: 4px 0 0; }
+.steps span { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--accent); }
+.steps span.on { background: var(--accent); }
+.tut-actions { display: flex; gap: 8px; padding: 12px 16px 0; }
+.tut-actions .btn { flex: 1; }
+
+/* Result */
+.dim { position: absolute; inset: 0; background: rgba(31,26,23,.55); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.dialog { width: 100%; background: var(--surface); border-radius: var(--radius); padding: 16px; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+.dialog h2 { font-size: 1.25rem; }
+.dialog ul { margin: 0 0 12px; padding-left: 20px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; border-radius: 999px; border: 2px solid var(--ok); color: var(--ok); font-weight: 700; font-size: .95rem; }
+.dialog-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.dialog-actions .btn { flex: 1 1 auto; }
+
+.notes { max-width: 360px; font-size: .95rem; color: var(--text-muted); margin: 8px 0 0; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<!-- Bindu, the mascot: same eyes, blush and smile family as Bija (Pallanguzhi); a round dot with a pencil -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="bindu" viewBox="0 0 512 512">
+    <rect width="512" height="512" rx="112" fill="#2f55a4"/>
+    <ellipse cx="256" cy="448" rx="120" ry="18" fill="#1d3a75" opacity="0.55"/>
+    <circle cx="256" cy="288" r="166" fill="#eef3ff" stroke="#1f2f5a" stroke-width="14"/>
+    <g transform="rotate(32 380 120)">
+      <rect x="352" y="40" width="46" height="130" rx="6" fill="#f4c84a" stroke="#1f2f5a" stroke-width="12"/>
+      <polygon points="352,170 398,170 375,214" fill="#e9b872" stroke="#1f2f5a" stroke-width="12" stroke-linejoin="round"/>
+      <polygon points="366,198 384,198 375,214" fill="#1f2f5a"/>
+    </g>
+    <circle cx="204" cy="268" r="24" fill="#3a2a20"/><circle cx="308" cy="268" r="24" fill="#3a2a20"/>
+    <circle cx="213" cy="259" r="8" fill="#fff"/><circle cx="317" cy="259" r="8" fill="#fff"/>
+    <circle cx="156" cy="326" r="22" fill="#f29c7e" opacity="0.75"/><circle cx="356" cy="326" r="22" fill="#f29c7e" opacity="0.75"/>
+    <path d="M212 332 Q256 384 300 332" fill="none" stroke="#3a2a20" stroke-width="14" stroke-linecap="round"/>
+    <circle cx="206" cy="396" r="9" fill="#1f2f5a"/><circle cx="306" cy="396" r="9" fill="#1f2f5a"/>
+  </symbol>
+</svg>
+
+<h1 class="page">Dots and Boxes: mockup for approval</h1>
+<p class="lead">Five screens at 360px wide, built with the shared hub tokens (only the accent colour <b>#2f55a4</b> is the game's own). Symbols as well as colour show who owns a box: <b>circle = you</b>, <b>diamond = rival</b>. Static pictures: the real screens are interactive.</p>
+
+<div class="frames">
+
+  <figure>
+    <figcaption>1. Title <small>Bindu, goal in one sentence, Play and How to play</small></figcaption>
+    <div class="phone">
+      <section class="title-screen">
+        <svg width="112" height="112" role="img" aria-label="Bindu, a friendly dot with a pencil" style="border-radius:26px;margin-bottom:12px"><use href="#bindu"/></svg>
+        <h1>Dots and Boxes</h1>
+        <p class="tagline">Draw a line. Close a box.</p>
+        <p class="goal-sentence">Close more boxes than your rival.</p>
+        <div class="title-actions">
+          <button class="btn btn-primary btn-block">Play</button>
+          <button class="btn btn-block">Continue your game</button>
+          <button class="btn btn-block">How to play</button>
+          <div class="row">
+            <button class="btn btn-quiet">Sound: on</button>
+            <button class="btn btn-quiet">Settings</button>
+            <button class="btn btn-quiet">Home</button>
+          </div>
+        </div>
+        <p class="fine-print">Free. Works offline. Nothing is collected.</p>
+      </section>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption>2. Play, 4x4 boxes <small>Rival has just given you a box; Hint is lighting the line to take it</small></figcaption>
+    <div class="phone">
+      <div class="play-header">
+        <button class="btn btn-quiet" aria-label="Home">&#8962;</button>
+        <h2 class="play-title">Dots and Boxes</h2>
+        <button class="btn btn-quiet" aria-label="Menu">&#9776;</button>
+      </div>
+      <p class="goal-line">Close more boxes than your rival.</p>
+      <div class="score">
+        <div class="who p0 turn"><svg class="mark" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="8" fill="#2f55a4"/></svg><span class="name">You</span><span class="count">2</span></div>
+        <div class="who p1"><svg class="mark" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><polygon points="11,2 20,11 11,20 2,11" fill="#b4540a"/></svg><span class="name">Rival</span><span class="count">1</span></div>
+      </div>
+      <p class="status">Your turn. The rival gave you a box!</p>
+      <div class="board-wrap"><svg class="board" id="board-play" viewBox="0 0 328 328" role="group" aria-label="4 by 4 board"></svg></div>
+      <div class="controls">
+        <button class="btn btn-quiet">Undo</button>
+        <button class="btn btn-quiet">Hint</button>
+        <button class="btn btn-quiet" aria-label="Rules">?</button>
+      </div>
+    </div>
+    <p class="notes">The last line drawn is thicker with a blue halo. Amber glow = Hint. Dotted lines are still free to tap.</p>
+  </figure>
+
+  <figure>
+    <figcaption>3. Tutorial step 4 of 5: the trap <small>Safe-line helper on: "!" marks lines that would hand over a box</small></figcaption>
+    <div class="phone">
+      <div class="play-header">
+        <button class="btn btn-quiet">Skip</button>
+        <h2 class="play-title">How to play</h2>
+        <span style="width:44px"></span>
+      </div>
+      <div class="bubble-row">
+        <svg width="64" height="64" role="img" aria-label="Bindu" style="border-radius:16px;flex:none"><use href="#bindu"/></svg>
+        <div class="bubble">A third side gives your rival the box. Tap the glowing line!</div>
+      </div>
+      <div class="board-wrap"><svg class="board" id="board-tut" viewBox="0 0 328 328" role="group" aria-label="3 by 3 board"></svg></div>
+      <div class="steps" aria-label="Step 4 of 5"><span class="on"></span><span class="on"></span><span class="on"></span><span class="on"></span><span></span></div>
+      <div class="tut-actions">
+        <button class="btn btn-quiet">Back</button>
+        <button class="btn btn-primary">Next</button>
+      </div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption>4. Result: says why <small>5x5 win vs Hard, shown over the finished board</small></figcaption>
+    <div class="phone">
+      <div class="play-header">
+        <button class="btn btn-quiet" aria-label="Home">&#8962;</button>
+        <h2 class="play-title">Dots and Boxes</h2>
+        <button class="btn btn-quiet" aria-label="Menu">&#9776;</button>
+      </div>
+      <p class="goal-line">Close more boxes than your rival.</p>
+      <div class="score" style="margin-top:8px">
+        <div class="who p0"><svg class="mark" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="8" fill="#2f55a4"/></svg><span class="name">You</span><span class="count">14</span></div>
+        <div class="who p1"><svg class="mark" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><polygon points="11,2 20,11 11,20 2,11" fill="#b4540a"/></svg><span class="name">Rival</span><span class="count">11</span></div>
+      </div>
+      <p class="status">Game over</p>
+      <div class="board-wrap"><svg class="board" id="board-end" viewBox="0 0 328 328" aria-hidden="true"></svg></div>
+      <div class="dim">
+        <div class="dialog" role="dialog" aria-labelledby="res-h">
+          <h2 id="res-h">You won, 14 to 11!</h2>
+          <ul>
+            <li>Your rival gave you <b>6 boxes</b>.</li>
+            <li>You closed a run of <b>5 boxes</b> in one turn.</li>
+            <li>You gave away 2 boxes.</li>
+          </ul>
+          <p><span class="badge">&#10003; New badge: Win on 5x5</span></p>
+          <div class="dialog-actions">
+            <button class="btn btn-primary">Play again</button>
+            <button class="btn">How to play</button>
+            <button class="btn btn-quiet">Home</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </figure>
+
+  <figure>
+    <figcaption>5. Tap areas on 5x5 <small>The hardest board for fingers (about 60px between dots)</small></figcaption>
+    <div class="phone" style="min-height:0;padding-bottom:16px">
+      <div class="board-wrap" style="padding-top:16px"><svg class="board" id="board-hit" viewBox="0 0 328 328" aria-hidden="true"></svg></div>
+      <p class="notes" style="padding:0 16px">Every line has a diamond-shaped tap area (shaded) running from dot to dot and out to the two neighbouring box centres. The areas touch with no gaps, and are about 60px across at the middle of each line, which is above the 44px minimum. They narrow towards the dots, where a tap picks the nearer line.</p>
+    </div>
+  </figure>
+
+</div>
+
+<script>
+// Geometry follows MASTER_SPEC section 5: h ids r*n+c; v ids n(n+1)+r*(n+1)+c; box id r*n+c.
+function board(svg, n, o) {
+  const P = 16, S = (328 - 2 * P) / n, NS = 'http://www.w3.org/2000/svg';
+  const drawn = new Set(o.drawn || []), glow = new Set(o.glow || []), warn = new Set(o.warn || []);
+  const owner = o.owner || {};
+  const X = c => P + c * S, Y = r => P + r * S;
+  const el = (t, a, parent) => { const e = document.createElementNS(NS, t); for (const k in a) e.setAttribute(k, a[k]); (parent || svg).appendChild(e); return e; };
+  const edge = id => {
+    const hN = n * (n + 1);
+    if (id < hN) { const r = Math.floor(id / n), c = id % n; return { x1: X(c), y1: Y(r), x2: X(c + 1), y2: Y(r), h: true, r, c }; }
+    const k = id - hN, r = Math.floor(k / (n + 1)), c = k % (n + 1);
+    return { x1: X(c), y1: Y(r), x2: X(c), y2: Y(r + 1), h: false, r, c };
+  };
+  // owned boxes: tint + symbol
+  for (const b in owner) {
+    const r = Math.floor(b / n), c = b % n, p = owner[b], cx = X(c) + S / 2, cy = Y(r) + S / 2;
+    el('rect', { x: X(c) + 2, y: Y(r) + 2, width: S - 4, height: S - 4, rx: 6, fill: p === 0 ? '#dbe5f7' : '#fbe3cf' });
+    if (p === 0) el('circle', { cx, cy, r: S * 0.2, fill: '#2f55a4' });
+    else el('polygon', { points: `${cx},${cy - S * 0.24} ${cx + S * 0.24},${cy} ${cx},${cy + S * 0.24} ${cx - S * 0.24},${cy}`, fill: '#b4540a' });
+  }
+  const total = 2 * n * (n + 1);
+  // hit-area overlay (diamonds)
+  if (o.hit) {
+    for (let id = 0; id < total; id++) {
+      const e = edge(id), mx = (e.x1 + e.x2) / 2, my = (e.y1 + e.y2) / 2, h = S / 2;
+      const a = e.h ? [mx, my - h] : [mx - h, my], b = e.h ? [mx, my + h] : [mx + h, my];
+      el('polygon', { points: `${e.x1},${e.y1} ${a[0]},${a[1]} ${e.x2},${e.y2} ${b[0]},${b[1]}`, fill: 'rgba(47,85,164,.10)', stroke: 'rgba(47,85,164,.55)', 'stroke-width': 1 });
+    }
+  }
+  // lines
+  for (let id = 0; id < total; id++) {
+    const e = edge(id);
+    if (drawn.has(id)) {
+      if (o.last === id) el('line', { x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2, stroke: '#2f55a4', 'stroke-opacity': .45, 'stroke-width': 18, 'stroke-linecap': 'round' });
+      el('line', { x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2, stroke: '#1f1a17', 'stroke-width': o.last === id ? 7 : 5, 'stroke-linecap': 'round' });
+    } else if (glow.has(id)) {
+      el('line', { x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2, stroke: '#ffb300', 'stroke-opacity': .45, 'stroke-width': 18, 'stroke-linecap': 'round' });
+      el('line', { x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2, stroke: '#8a5a00', 'stroke-width': 5, 'stroke-linecap': 'round', 'stroke-dasharray': '2 9' });
+    } else {
+      el('line', { x1: e.x1, y1: e.y1, x2: e.x2, y2: e.y2, stroke: '#8d8177', 'stroke-width': 2.5, 'stroke-linecap': 'round', 'stroke-dasharray': '1 8' });
+    }
+    if (warn.has(id) && !drawn.has(id)) {
+      const mx = (e.x1 + e.x2) / 2, my = (e.y1 + e.y2) / 2;
+      el('circle', { cx: mx, cy: my, r: 10, fill: '#8a5a00' });
+      const t = el('text', { x: mx, y: my + 5, 'text-anchor': 'middle', 'font-size': 14, 'font-weight': 700, fill: '#fff', 'font-family': 'system-ui' }); t.textContent = '!';
+    }
+  }
+  // dots on top
+  for (let r = 0; r <= n; r++) for (let c = 0; c <= n; c++) el('circle', { cx: X(c), cy: Y(r), r: 5.5, fill: '#1f1a17' });
+}
+
+// 2. Play 4x4 (box ownership matches the drawn lines; edge 27 takes box (1,1))
+board(document.getElementById('board-play'), 4, {
+  drawn: [0,1,2,4,5,8,9,10,12,20,21,22,25,26,28], last: 9, glow: [27],
+  owner: { 0: 0, 1: 0, 4: 1 }
+});
+// 3. Tutorial 3x3: edge 2 is the safe glowing line; 3, 13 give box (0,0) a third side; 8, 22 give box (2,2) a third side
+board(document.getElementById('board-tut'), 3, {
+  drawn: [0, 12, 11, 23], glow: [2], warn: [3, 13, 8, 22], owner: {}
+});
+// 4. Finished 5x5: all lines drawn, boxes owned (14 you, 11 rival)
+(function () {
+  const n = 5, total = 2 * n * (n + 1), drawn = [], owner = {};
+  for (let i = 0; i < total; i++) drawn.push(i);
+  const mine = new Set([0,1,2,3,4,5,6,9,10,11,12,13,15,16]); // 14 boxes
+  for (let b = 0; b < 25; b++) owner[b] = mine.has(b) ? 0 : 1;
+  board(document.getElementById('board-end'), n, { drawn, owner });
+})();
+// 5. 5x5 tap areas
+board(document.getElementById('board-hit'), 5, { hit: true, drawn: [0, 1, 7, 12, 14, 30, 35], owner: {} });
+</script>
+</body>
+</html>
