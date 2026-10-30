@@ -51,3 +51,6 @@ Chaturanga is listed under Adults, and also shows under Challengers and Family v
 
 ## 2026-10-30 Coordinate letters on the board
 The small a-h and 1-8 labels on the board edge are decorative and hidden from screen readers. They are an exception to the 16px text rule because they sit inside squares.
+
+## 2026-10-30 Verified
+Live at https://sunilkks0507.github.io/game-hub/. 51 tests pass and gate the deploy. 29 files precached; offline reload and tutorial board checked in Chromium. 360px layout has no horizontal scroll. Not yet tested on a real phone.
