@@ -77,6 +77,31 @@ Three lines each: what, why, date.
   Existing sounds are unchanged, so Chaturanga is not affected.
   30 Oct 2026
 
+## Third game: Dots and Boxes
+- **Game choice:** Dots and Boxes (catalogue #29), chosen by Sunil from three options (with Nim and Four in a Row) as a game both children and adults enjoy.
+  Simple to start, real chain strategy for adults, and it reuses the engine + Worker bot pattern.
+  31 Oct 2026
+
+- **Category:** Family primary, also Explorers, Challengers and Adults. Ages 7 and up. Mascot Bindu, small and dismissible.
+  Sunil asked for a game for both audiences, so the all-ages category leads. Agreed with the recommendation.
+  31 Oct 2026
+
+- **Boards and start:** 3x3, 4x4 and 5x5 boxes. On 3x3 the player picks who starts; on larger boards the starter alternates each game.
+  Moving first changes the odds on this game, so the choice is kept fair and simple.
+  31 Oct 2026
+
+- **Rule set (default, confirm):** classic rules. Close a box and go again; most boxes wins; no pie rule, no timers. Full rules in `src/games/dots-and-boxes/MASTER_SPEC.md` section 6.
+  3x3 and 5x5 cannot tie; 4x4 can.
+  31 Oct 2026
+
+- **Bot levels (default, confirm):** Easy plays a random line 30% of the time; Medium takes boxes, avoids third sides and gives away the smallest chain; Hard adds chain control and a 1.5 s search.
+  Easy must be beatable by a child; Hard should challenge an adult. Phone timings are not measured yet.
+  31 Oct 2026
+
+- **Tap areas:** each line has a diamond-shaped hit area of at least 44px; keyboard play with arrow keys.
+  Thin lines are hard to tap, especially at 5x5 on a 360px screen.
+  31 Oct 2026
+
 ## Watching real players
 Notes from watching a new player try each game go here (Step 7 of the workflow).
 
