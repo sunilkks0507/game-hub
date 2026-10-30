@@ -1,0 +1,10 @@
+{
+  "name": "game-hub",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Offline-first PWA game hub. No dependencies, no build step.",
+  "scripts": {
+    "test": "node --test"
+  }
+}
