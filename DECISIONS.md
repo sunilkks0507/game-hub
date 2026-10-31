@@ -152,3 +152,6 @@ Found while checking the live site: sw.js never changed between deploys, so a br
 
 ## 2026-10-30 Verified (Pallanguzhi)
 Live at https://sunilkks0507.github.io/game-hub/games/pallanguzhi/index.html. 81 tests pass and gate the deploy. In Chromium at 360px: no horizontal scroll, tutorial, full game vs computer, two-player, undo, hint, give up, grown-up gate, continue after reload, and offline play all worked with no console errors. Live hub list and game page confirmed after clearing the old cache. NOT tested: a real phone, a real child (Step 7 stays unticked), the update path for a browser holding the old service worker (fixed above, check after deploy).
+
+## 2026-10-31 Verified (Ten Frame Garden)
+Live at https://sunilkks0507.github.io/game-hub/games/ten-frame-garden/index.html. 165 tests pass and gate the deploy. In Chromium at 360px: all four levels played through to the result, no horizontal scroll, no digits on the Level 1 play and result screens, keyboard play (arrows, Enter, Backspace), Undo, Hint, continue after reload, grown-up gate, and no console errors. On the live site (Chrome): service worker active, 9 game files precached under the current build, a Bonds to 20 frame completes. NOT tested: a real phone, a real child (Step 7 stays unticked), a literal offline reload on the live URL (checked in the local run and by the cache contents only).
