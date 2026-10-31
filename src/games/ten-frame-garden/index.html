@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Ten Frame Garden</title>
+  <meta name="description" content="Ten Frame Garden: plant seeds to fill the frame and learn pairs that make 10 and 20. Free, offline, no ads.">
+  <meta name="theme-color" content="#2f7d32">
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="../../shared/tokens.css">
+  <link rel="stylesheet" href="../../shared/base.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Pictures used all over the game. Shapes differ, not just colours. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="seed" viewBox="0 0 48 48"><ellipse cx="24" cy="25" rx="15" ry="13" fill="#8a5a2b"/><ellipse cx="19" cy="20" rx="5" ry="3" fill="#c79a66" opacity=".8"/></symbol>
+      <symbol id="leaf" viewBox="0 0 48 48"><path d="M8 40C8 18 22 8 42 8c0 22-12 32-34 32z" fill="#2f7d32" stroke="#1b4d1f" stroke-width="2"/><path d="M12 36L34 14" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/></symbol>
+      <symbol id="flower" viewBox="0 0 48 48"><g fill="#d9467a"><circle cx="24" cy="12" r="7"/><circle cx="36" cy="24" r="7"/><circle cx="24" cy="36" r="7"/><circle cx="12" cy="24" r="7"/></g><circle cx="24" cy="24" r="7" fill="#ffb300"/></symbol>
+      <symbol id="bud" viewBox="0 0 48 48"><path d="M24 40V24" stroke="#2f7d32" stroke-width="4" stroke-linecap="round"/><ellipse cx="24" cy="18" rx="7" ry="9" fill="#8bc48e" stroke="#2f7d32" stroke-width="2"/></symbol>
+      <symbol id="pip" viewBox="0 0 64 64">
+        <path d="M32 58V34" stroke="#2f7d32" stroke-width="5" stroke-linecap="round"/>
+        <path d="M32 40C20 40 12 32 12 22c12 0 20 6 20 18z" fill="#4caf50" stroke="#1b4d1f" stroke-width="2.5"/>
+        <path d="M32 40c12 0 20-8 20-18-12 0-20 6-20 18z" fill="#4caf50" stroke="#1b4d1f" stroke-width="2.5"/>
+        <circle cx="32" cy="30" r="14" fill="#8bd48e" stroke="#1b4d1f" stroke-width="2.5"/>
+        <circle cx="27" cy="28" r="2.6" fill="#1f1a17"/><circle cx="37" cy="28" r="2.6" fill="#1f1a17"/>
+        <path d="M26 34q6 5 12 0" stroke="#1f1a17" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      </symbol>
+    </defs>
+  </svg>
+
+  <main id="app">
+
+    <!-- Title screen -->
+    <section id="screen-title" class="screen title-screen" aria-labelledby="title-heading">
+      <svg class="pip title-pip" width="112" height="112" role="img" aria-label="Pip the sprout"><use href="#pip"/></svg>
+      <h1 id="title-heading">Ten Frame Garden</h1>
+      <p class="tagline">Plant seeds, grow flowers</p>
+      <p class="goal-sentence">Fill the frame so both parts make 10.</p>
+      <div class="title-actions">
+        <button id="btn-play" class="btn btn-primary btn-block big" type="button">Play</button>
+        <button id="btn-continue" class="btn btn-block big" type="button" hidden>Continue your garden</button>
+        <button id="btn-howto" class="btn btn-block big" type="button">How to play</button>
+        <div class="row">
+          <button id="btn-sound" class="btn btn-quiet" type="button" aria-pressed="true">Sound: on</button>
+          <button id="btn-settings" class="btn btn-quiet" type="button">Settings</button>
+          <a class="btn btn-quiet" href="../../" id="link-home">Home</a>
+        </div>
+      </div>
+      <p class="fine-print">Free. Works offline. Nothing is collected.</p>
+    </section>
+
+    <!-- Level picker -->
+    <section id="screen-levels" class="screen levels-screen" aria-labelledby="levels-heading" hidden>
+      <h1 id="levels-heading">Pick a garden</h1>
+      <div class="levels" role="group" aria-label="Garden level">
+        <button class="level" type="button" data-level="1" aria-pressed="false" aria-label="Dots. Count the dots. Ages 4 to 6.">
+          <span class="mini" aria-hidden="true"><i class="dot"></i><i class="dot"></i><i class="dot"></i></span>
+          <span class="level-name">Dots</span><small>4-6</small>
+        </button>
+        <button class="level" type="button" data-level="2" aria-pressed="false" aria-label="Fill to 10. Ages 5 to 8.">
+          <span class="mini" aria-hidden="true">6 + ?</span>
+          <span class="level-name">Fill to 10</span><small>5-8</small>
+        </button>
+        <button class="level" type="button" data-level="3" aria-pressed="false" aria-label="Two parts. Ages 6 to 8.">
+          <span class="mini" aria-hidden="true"><i class="dot"></i><i class="dot"></i><i class="dot leaf"></i><i class="dot leaf"></i><i class="dot leaf"></i></span>
+          <span class="level-name">Two parts</span><small>6-8</small>
+        </button>
+        <button class="level" type="button" data-level="4" aria-pressed="false" aria-label="Bonds to 20. Ages 7 to 8.">
+          <span class="mini" aria-hidden="true">20</span>
+          <span class="level-name">Bonds to 20</span><small>7-8</small>
+        </button>
+      </div>
+      <div class="levels-actions">
+        <button id="btn-start-garden" class="btn btn-primary btn-block big" type="button">Start</button>
+        <button id="btn-levels-back" class="btn btn-quiet btn-block" type="button">Back</button>
+      </div>
+    </section>
+
+    <!-- Play screen -->
+    <section id="screen-play" class="screen play-screen" aria-label="Garden" hidden>
+      <header class="play-header">
+        <button id="btn-menu" class="btn btn-quiet" type="button" aria-haspopup="dialog">Menu</button>
+        <h1 class="play-title">Ten Frame Garden</h1>
+        <button id="btn-rules" class="btn btn-quiet icon-btn" type="button" aria-label="Rules">?</button>
+      </header>
+      <div id="garden" class="garden" role="img" aria-label="Garden"></div>
+      <p id="goal-line" class="goal-line"></p>
+      <div id="status" class="status" aria-hidden="true"></div>
+      <div id="tray" class="tray" hidden></div>
+      <div id="board" class="board"></div>
+      <div id="pair-panel" class="pair-panel" hidden></div>
+      <div class="pip-row">
+        <svg id="pip-play" class="pip" width="48" height="48" aria-hidden="true"><use href="#pip"/></svg>
+        <p id="bubble" class="bubble"></p>
+      </div>
+      <div class="play-controls">
+        <button id="btn-undo" class="btn btn-quiet big" type="button">Undo</button>
+        <button id="btn-hint" class="btn btn-quiet big" type="button">Hint</button>
+        <button id="btn-next" class="btn btn-primary big" type="button" hidden>Next</button>
+      </div>
+    </section>
+
+    <!-- Tutorial screen -->
+    <section id="screen-tutorial" class="screen tutorial-screen" aria-label="How to play" hidden>
+      <header class="tutorial-header">
+        <div>
+          <p id="tut-step-label" class="tutorial-step"></p>
+          <div id="tut-dots" class="steps-row" aria-hidden="true"></div>
+        </div>
+        <button id="btn-tut-skip" class="btn btn-quiet" type="button">Skip</button>
+      </header>
+      <div class="guide">
+        <svg id="pip-tut" class="pip" width="52" height="52" aria-hidden="true"><use href="#pip"/></svg>
+        <div class="guide-bubble">
+          <p id="tut-text" class="tutorial-text" tabindex="-1"></p>
+        </div>
+      </div>
+      <div id="tut-status" class="status" aria-hidden="true"></div>
+      <div id="tut-board" class="board"></div>
+      <div id="tut-pair" class="pair-panel" hidden></div>
+      <p id="tut-feedback" class="tutorial-feedback" role="status" aria-live="polite"></p>
+      <div class="tutorial-actions">
+        <button id="btn-tut-hint" class="btn btn-quiet big" type="button" hidden>Try the Hint</button>
+        <button id="btn-tut-next" class="btn btn-primary btn-block big" type="button" disabled>Next</button>
+        <div id="tut-final" hidden>
+          <button id="btn-tut-play" class="btn btn-primary btn-block big" type="button">Start playing</button>
+          <button id="btn-tut-finish" class="btn btn-quiet btn-block" type="button">Not now</button>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Tells screen readers what just happened (not shown) -->
+  <div id="live" class="visually-hidden" role="status" aria-live="polite"></div>
+
+  <!-- Menu -->
+  <dialog id="dlg-menu" aria-labelledby="menu-title">
+    <h2 id="menu-title">Menu</h2>
+    <div class="stack">
+      <button id="menu-howto" class="btn btn-block" type="button">How to play</button>
+      <button id="menu-settings" class="btn btn-block" type="button">Settings</button>
+      <button id="menu-levels" class="btn btn-block" type="button">Change level</button>
+      <a class="btn btn-block" href="../../">Home</a>
+      <button id="menu-close" class="btn btn-quiet btn-block" type="button">Back to the garden</button>
+    </div>
+  </dialog>
+
+  <!-- Rules card (Dots level opens the tutorial instead, because that level has no reading) -->
+  <dialog id="dlg-rules" aria-labelledby="rules-title">
+    <h2 id="rules-title">Rules</h2>
+    <p><strong>Goal.</strong> <span id="rules-goal"></span></p>
+    <p><strong>Your turn.</strong> Tap an empty cell to plant a seed. Round seeds were already there. Your seeds are leaves.</p>
+    <p id="rules-two" hidden><strong>Two parts.</strong> Plant the number you see. The rest fill in by themselves.</p>
+    <p><strong>A flower grows</strong> when the frame is full. Five flowers make a garden.</p>
+    <p class="rules-variant"><strong>Rule set.</strong> A ten-frame is 2 rows of 5. Bonds to 20 uses two frames. There is no timer and you cannot lose.</p>
+    <p><strong>Tip.</strong> Stuck? Tap Hint to see how many more seeds you need.</p>
+    <div class="dialog-actions"><button id="rules-close" class="btn btn-primary" type="button">Got it</button></div>
+  </dialog>
+
+  <!-- Settings -->
+  <dialog id="dlg-settings" aria-labelledby="settings-title">
+    <h2 id="settings-title">Settings</h2>
+    <div class="stack">
+      <label class="choice"><input id="set-sound" type="checkbox"> <span>Sound</span></label>
+      <label class="choice"><input id="set-motion" type="checkbox"> <span>Reduce motion</span></label>
+      <button id="set-grownups" class="btn btn-block" type="button">For grown-ups</button>
+      <button id="set-reset" class="btn btn-danger btn-block" type="button">Reset my garden and badges</button>
+    </div>
+    <div class="dialog-actions"><button id="settings-close" class="btn btn-primary" type="button">Done</button></div>
+  </dialog>
+
+  <!-- Grown-up gate -->
+  <dialog id="dlg-gate" aria-labelledby="gate-title">
+    <h2 id="gate-title">Grown-ups only</h2>
+    <form id="gate-form" class="stack" method="dialog">
+      <label class="field"><span id="gate-question"></span>
+        <input id="gate-answer" type="number" inputmode="numeric" autocomplete="off" required>
+      </label>
+      <p id="gate-msg" class="gate-msg" role="status"></p>
+      <div class="dialog-actions">
+        <button id="gate-cancel" class="btn btn-quiet" type="button">Cancel</button>
+        <button class="btn btn-primary" type="submit">Continue</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- Grown-up corner -->
+  <dialog id="dlg-grownups" aria-labelledby="grownups-title">
+    <h2 id="grownups-title">For grown-ups</h2>
+    <p><strong>What it practises.</strong> Number pairs that make 10 and 20, using a ten-frame. The child sees how many are there and how many more make ten. It is practice of one skill, not a test.</p>
+    <p><strong>Levels.</strong> Dots (no numbers, for the youngest), Fill to 10, Two parts, and Bonds to 20. Every level is open. There is no timer and no way to lose.</p>
+    <p><strong>Privacy.</strong> Works offline. No ads, no accounts, no tracking. Progress and badges stay on this device only.</p>
+    <p><a href="../../privacy.html">Read the privacy note</a></p>
+    <div class="dialog-actions"><button id="grownups-close" class="btn btn-primary" type="button">Close</button></div>
+  </dialog>
+
+  <!-- Garden result -->
+  <dialog id="dlg-result" aria-labelledby="result-title">
+    <h2 id="result-title"></h2>
+    <div id="result-flowers" class="result-flowers" role="img" aria-label=""></div>
+    <ul id="result-facts" class="facts"></ul>
+    <ul id="result-badges" class="badge-list"></ul>
+    <div class="dialog-actions">
+      <button id="btn-again" class="btn btn-primary big" type="button">Play again</button>
+      <button id="btn-result-levels" class="btn" type="button">Change level</button>
+      <button id="btn-result-howto" class="btn" type="button">How to play</button>
+      <a class="btn btn-quiet" href="../../">Home</a>
+    </div>
+  </dialog>
+
+  <div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
