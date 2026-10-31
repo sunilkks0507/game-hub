@@ -57,6 +57,13 @@ export function createSound({ muted = false } = {}) {
     success: () => [660, 880].forEach((f, i) => tone({ freq: f, start: i * 0.09, dur: 0.14, type: 'triangle', gain: 0.1 })),
     // A pencil line being drawn.
     line: () => tone({ freq: 330, slideTo: 250, dur: 0.07, type: 'triangle', gain: 0.12 }),
+    // A stone set down on a board: a short wooden click.
+    stone: () => {
+      tone({ freq: 300, slideTo: 190, dur: 0.07, type: 'triangle', gain: 0.15 });
+      tone({ freq: 760, start: 0.01, dur: 0.03, type: 'square', gain: 0.03 });
+    },
+    // Two sides trade places.
+    swap: () => [440, 330, 440].forEach((f, i) => tone({ freq: f, start: i * 0.08, dur: 0.1, type: 'sine', gain: 0.09 })),
     // A box closes. `step` (boxes closed so far this turn) raises the pitch, so a long run sounds like a rising scale.
     box: (step = 0) => {
       const base = 520 + Math.min(step, 8) * 60;
