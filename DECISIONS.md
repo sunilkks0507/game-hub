@@ -105,6 +105,7 @@ Three lines each: what, why, date.
 - 31 Oct 2026: Dropped `chains.js`. Hard is an exact memoised solver once 19 or fewer lines are left; before that it plays Medium. Reason: simpler, provably best at the end, about 200 ms on 5x5.
 - 31 Oct 2026: Safe-line helper setting is Auto/Always/Never; Auto means on for Easy only. Reason: lets a child learn the "third side" idea, then turn it off.
 - 31 Oct 2026: Verified (Dots and Boxes v0.1.0): 125 tests pass (`npm test`); played in Chromium at 360px (tutorial, vs computer to a finished game, two-player 5x5, undo, keyboard arrows, save and continue, hint, rules): no console errors, no horizontal scroll. NOT tested: a real phone, a real child, Hard speed on a slow phone.
+- 31 Oct 2026: Added boards 6x6 to 10x10 (asked by Sunil). Dot gap never goes below 44px, so boards from 7x7 slide sideways inside their frame; the page never scrolls sideways. Hard still only solves the last 19 lines, so on big boards it plays like Medium until the end.
 
 ## Watching real players
 Notes from watching a new player try each game go here (Step 7 of the workflow).

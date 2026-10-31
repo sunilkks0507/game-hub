@@ -46,9 +46,17 @@
         </fieldset>
         <fieldset>
           <legend>Board size</legend>
-          <label class="choice"><input type="radio" name="size" value="3" checked> <span>Small, 3 by 3 <small>about 4 minutes</small></span></label>
-          <label class="choice"><input type="radio" name="size" value="4"> <span>Medium, 4 by 4 <small>about 8 minutes</small></span></label>
-          <label class="choice"><input type="radio" name="size" value="5"> <span>Large, 5 by 5 <small>about 15 minutes</small></span></label>
+          <div class="size-grid">
+            <label class="choice"><input type="radio" name="size" value="3" checked> <span>3 by 3</span></label>
+            <label class="choice"><input type="radio" name="size" value="4"> <span>4 by 4</span></label>
+            <label class="choice"><input type="radio" name="size" value="5"> <span>5 by 5</span></label>
+            <label class="choice"><input type="radio" name="size" value="6"> <span>6 by 6</span></label>
+            <label class="choice"><input type="radio" name="size" value="7"> <span>7 by 7</span></label>
+            <label class="choice"><input type="radio" name="size" value="8"> <span>8 by 8</span></label>
+            <label class="choice"><input type="radio" name="size" value="9"> <span>9 by 9</span></label>
+            <label class="choice"><input type="radio" name="size" value="10"> <span>10 by 10</span></label>
+          </div>
+          <p id="size-note" class="size-note"></p>
         </fieldset>
         <fieldset id="fs-level">
           <legend>Computer level</legend>
@@ -83,6 +91,7 @@
       </div>
       <div id="status" class="status" role="status" aria-live="polite"></div>
       <div id="board" class="board-wrap"></div>
+      <p id="wide-note" class="last-move-line" hidden>Swipe the board sideways to see all of it.</p>
       <p id="last-move" class="last-move-line"></p>
       <div class="play-controls">
         <button id="btn-undo" class="btn btn-quiet" type="button">Undo</button>
@@ -139,7 +148,7 @@
     <p><strong>Close a box.</strong> If your line is the fourth side of a box, the box is yours and you go again. Close two boxes with one line and you get both.</p>
     <p><strong>No box closed?</strong> Then it is your rival's turn.</p>
     <p><strong>The game ends</strong> when every line is drawn. Most boxes wins.</p>
-    <p class="rules-variant"><strong>Rule set.</strong> Classic Dots and Boxes. You may leave a box open on purpose, but you must always draw a line. 3 by 3 and 5 by 5 boards can never end in a tie.</p>
+    <p class="rules-variant"><strong>Rule set.</strong> Classic Dots and Boxes. You may leave a box open on purpose, but you must always draw a line. Boards with an odd size (3, 5, 7, 9) can never end in a tie.</p>
     <p><strong>Tip.</strong> A box with three sides is a gift: your rival can close it. Draw safe lines first.</p>
     <div class="dialog-actions"><button id="rules-close" class="btn btn-primary" type="button">Got it</button></div>
   </dialog>
@@ -189,7 +198,7 @@
   <dialog id="dlg-grownups" aria-labelledby="grownups-title">
     <h2 id="grownups-title">For grown-ups</h2>
     <p><strong>What it teaches.</strong> Planning ahead and spotting what a move will allow. Children learn to avoid drawing a third side, and later to count chains.</p>
-    <p><strong>Age.</strong> Made for ages 7 and up, and enjoyed by adults. A game takes 4 to 15 minutes.</p>
+    <p><strong>Age.</strong> Made for ages 7 and up, and enjoyed by adults. A game takes about 4 minutes on the small board and much longer on the big ones.</p>
     <p><strong>Privacy.</strong> Works offline. No ads, no accounts, no tracking. Scores and badges stay on this device only.</p>
     <p><a href="../../privacy.html">Read the privacy note</a></p>
     <div class="dialog-actions"><button id="grownups-close" class="btn btn-primary" type="button">Close</button></div>

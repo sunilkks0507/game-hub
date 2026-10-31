@@ -10,7 +10,7 @@ const GEOMETRY = new Map();
 
 // Fixed facts about a board size. Cached, and never changed by the game.
 export function geometry(n) {
-  if (!Number.isInteger(n) || n < 1 || n > 8) throw new RangeError('Board size must be a whole number from 1 to 8.');
+  if (!Number.isInteger(n) || n < 1 || n > 10) throw new RangeError('Board size must be a whole number from 1 to 10.');
   if (GEOMETRY.has(n)) return GEOMETRY.get(n);
   const hCount = n * (n + 1);
   const E = 2 * hCount;

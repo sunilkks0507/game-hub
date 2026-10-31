@@ -259,3 +259,20 @@ test('Hard answers within its time budget on a full 5x5 game', () => {
   }
   assert.ok(slowest < 1800, `slowest Hard move took ${slowest} ms`);
 });
+
+test('every level answers quickly on the biggest boards (10x10)', () => {
+  const rng = seededRng(77);
+  for (const level of ['easy', 'medium', 'hard']) {
+    const s = randomPosition(10, rng, 110);
+    const t = Date.now();
+    const m = chooseMove(s, { level, rng, timeMs: 1500 });
+    assert.ok(legalMoves(s).includes(m));
+    assert.ok(Date.now() - t < 300, `${level} took ${Date.now() - t} ms`);
+  }
+  // a whole game on 10x10 with Medium on both sides finishes and fills the board
+  const g = newGame({ n: 10 });
+  const t0 = Date.now();
+  while (!g.over) assert.ok(applyMove(g, chooseMove(g, { level: 'medium', rng })));
+  assert.equal(g.scores[0] + g.scores[1], 100);
+  assert.ok(Date.now() - t0 < 5000, 'a whole 10x10 Medium game takes under 5 s of thinking');
+});

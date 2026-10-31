@@ -17,8 +17,9 @@
 import { geometry } from './engine.js';
 
 const NS = 'http://www.w3.org/2000/svg';
-const SIZE = 328;
+const SIZE = 328; // board width in screen pixels on a 360px phone
 const PAD = 16;
+const MIN_STEP = 44; // smallest gap between dots, so every line is at least 44px to tap
 
 function svgEl(tag, attrs = {}, parent = null) {
   const el = document.createElementNS(NS, tag);
@@ -46,9 +47,13 @@ export function createBoard(root, { onTap }) {
   function build(size) {
     n = size;
     g = geometry(n);
-    S = (SIZE - 2 * PAD) / n;
+    S = Math.max(MIN_STEP, (SIZE - 2 * PAD) / n);
+    const total = 2 * PAD + n * S;
     root.replaceChildren();
-    svg = svgEl('svg', { class: 'dnb-board', viewBox: `0 0 ${SIZE} ${SIZE}`, role: 'group', focusable: 'false' });
+    svg = svgEl('svg', { class: 'dnb-board', viewBox: `0 0 ${total} ${total}`, role: 'group', focusable: 'false' });
+    // Big boards keep 44px tap areas and slide sideways inside the board frame (the page itself never scrolls sideways).
+    if (total > SIZE) svg.style.width = `${total}px`;
+    root.classList.toggle('wide', total > SIZE);
     root.append(svg);
     hits = [];
     lines = [];
@@ -232,6 +237,12 @@ export function createBoard(root, { onTap }) {
     // For tests in a browser.
     get hits() {
       return hits;
+    },
+    // Slide a wide board so the given line is in view.
+    reveal(edge) {
+      if (!root.classList.contains('wide') || !hits[edge]) return;
+      const target = hits[edge].mx / svg.viewBox.baseVal.width * svg.getBoundingClientRect().width;
+      root.scrollTo({ left: Math.max(0, target - root.clientWidth / 2), behavior: 'auto' });
     },
     focusFirst() {
       const open = hits.find((h) => h.getAttribute('aria-disabled') === 'false');

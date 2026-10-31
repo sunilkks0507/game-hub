@@ -20,6 +20,7 @@ const BADGES = {
   first_win: 'First win',
   win_hard: 'Beat the Hard bot',
   win_5x5: 'Won on the 5 by 5 board',
+  win_big: 'Won on a board of 7 by 7 or bigger',
   run_4: 'Closed 4 or more boxes in one turn',
   clean_win: 'Clean win: you never gave a box away',
 };
@@ -143,7 +144,7 @@ function startGame({ mode, n, level, first }) {
 function resumeGame() {
   const saved = store.get('saved');
   if (!saved || !Array.isArray(saved.moves)) return false;
-  const n = [3, 4, 5].includes(saved.n) ? saved.n : 3;
+  const n = Number.isInteger(saved.n) && saved.n >= 3 && saved.n <= 10 ? saved.n : 3;
   const first = saved.first === 1 ? 1 : 0;
   const { state, applied } = replay(n, first, saved.moves);
   if (state.over) {
@@ -209,6 +210,8 @@ function render() {
     lm.textContent = `Last move: ${who} drew a line${s.last.boxes ? ` and closed ${plural(s.last.boxes)}` : ''}.`;
   } else lm.textContent = '';
 
+  if (s.moves.length) board.reveal(s.moves[s.moves.length - 1]);
+  $('wide-note').hidden = s.n < 7;
   $('btn-undo').disabled = s.moves.length === 0 || s.over;
   $('btn-hint').hidden = s.mode === 'two';
   $('btn-hint').disabled = s.over || s.thinking || !humanTurn();
@@ -387,6 +390,7 @@ function finishGame() {
       award('first_win');
       if (s.level === 'hard') award('win_hard');
       if (s.n === 5) award('win_5x5');
+      if (s.n >= 7) award('win_big');
       if (facts.gifts[0] === 0 && s.resigned === null) award('clean_win');
     }
     writeProgress(progress);
@@ -489,8 +493,9 @@ $('btn-settings').addEventListener('click', openSettings);
 function openSetup() {
   const form = $('setup-form');
   form.elements.level.value = settings.level;
-  $('first-note').textContent = 'On 4 by 4 and 5 by 5 boards the starter swaps every game.';
+  $('first-note').textContent = 'On boards bigger than 3 by 3 the starter swaps every game.';
   syncSetup();
+  syncSizeNote();
   show('setup');
   form.querySelector('input:checked').focus();
 }
@@ -500,7 +505,15 @@ function syncSetup() {
   $('fs-level').hidden = two;
   $('fs-first').hidden = two || f.size.value !== '3';
 }
-$('setup-form').addEventListener('change', syncSetup);
+const SIZE_MINUTES = { 3: 4, 4: 8, 5: 15, 6: 25, 7: 35, 8: 50, 9: 65, 10: 80 };
+function syncSizeNote() {
+  const n = Number($('setup-form').elements.size.value);
+  $('size-note').textContent = `${n * n} boxes, about ${SIZE_MINUTES[n]} minutes.${n >= 7 ? ' Swipe the board sideways to see all of it.' : ''}`;
+}
+$('setup-form').addEventListener('change', () => {
+  syncSetup();
+  syncSizeNote();
+});
 $('setup-form').addEventListener('submit', (event) => {
   event.preventDefault();
   const f = $('setup-form').elements;

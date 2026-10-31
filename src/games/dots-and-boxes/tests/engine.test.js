@@ -40,7 +40,7 @@ test('line and box counts for 3, 4 and 5', () => {
 test('bad board sizes are refused', () => {
   assert.throws(() => geometry(0));
   assert.throws(() => geometry(2.5));
-  assert.throws(() => geometry(9));
+  assert.throws(() => geometry(11));
 });
 
 test('line numbering matches the spec', () => {
@@ -271,4 +271,20 @@ test('summary matches the final score in random games', () => {
     assert.equal(sum.gifts[1], s.scores[0]);
     assert.ok(sum.bestRun[0] <= s.scores[0] && sum.bestRun[1] <= s.scores[1]);
   }
+});
+
+test('boards from 6x6 up to 10x10 have the right counts and every playout ends with all lines drawn', () => {
+  for (let n = 6; n <= 10; n++) {
+    assert.equal(edgeCount(n), 2 * n * (n + 1));
+    const s = newGame({ n });
+    let seed = n * 7919;
+    const rnd = () => ((seed = (seed * 1103515245 + 12345) & 0x7fffffff) / 0x7fffffff);
+    while (!s.over) {
+      const m = legalMoves(s);
+      assert.ok(applyMove(s, m[Math.floor(rnd() * m.length)]));
+    }
+    assert.equal(s.scores[0] + s.scores[1], n * n);
+    assert.ok(s.edges.every((e) => e === 1));
+  }
+  assert.throws(() => geometry(11));
 });

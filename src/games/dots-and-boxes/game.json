@@ -17,7 +17,7 @@
   "howToWin": "Take turns drawing one line. Draw the fourth side of a box to own it and go again. The most boxes wins.",
   "controls": "tap",
   "difficulty": ["easy", "medium", "hard"],
-  "ruleVariant": "Classic Dots and Boxes: one line per turn, close a box and go again, most boxes wins. Boards 3x3, 4x4 or 5x5 boxes.",
+  "ruleVariant": "Classic Dots and Boxes: one line per turn, close a box and go again, most boxes wins. Boards from 3x3 up to 10x10 boxes.",
   "about": "Dots and Boxes is a pencil-and-paper game played in many countries for over a century.",
   "tutorialSteps": 5,
   "mascot": "bindu"
