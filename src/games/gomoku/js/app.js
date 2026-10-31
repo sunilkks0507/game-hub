@@ -232,7 +232,7 @@ function render() {
   el.append(document.createTextNode(text));
 
   const onePlace = settings.placing === 'one-tap';
-  $('place-row').hidden = onePlace;
+  $('place-row').hidden = onePlace || st.phase === 'swap';
   $('btn-place').disabled = !enabled || s.preview < 0;
   $('btn-place').textContent = s.preview >= 0 ? `Place stone at ${pointLabel(s.n, s.preview)}` : 'Tap a point to preview';
 

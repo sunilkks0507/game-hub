@@ -139,8 +139,7 @@ export function createBoard(root, { onTap, onEscape = () => {} }) {
       const halo = Math.max(22, gap * 0.44 + 8);
       const g = svgEl('g', { class: `ghost s${colour}`, transform: `translate(${px(preview)} ${py(preview)})` }, layerOver);
       svgEl('circle', { class: 'halo', r: halo }, g);
-      const disc = svgEl('circle', { class: 'disc', r: gap * 0.44 }, g);
-      disc.setAttribute('stroke-dasharray', '3 3');
+      svgEl('circle', { class: 'disc', r: gap * 0.44 }, g);
       if (colour === 1) svgEl('circle', { class: 'ring-mark', r: gap * 0.44 * 0.5 }, g);
     }
 
