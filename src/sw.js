@@ -58,4 +58,4 @@ self.addEventListener('fetch', (event) => {
   );
 });
 
-// BUILD a43826b024 (written by scripts/build-game-list.mjs; do not edit)
+// BUILD 4aca2c9d3c (written by scripts/build-game-list.mjs; do not edit)

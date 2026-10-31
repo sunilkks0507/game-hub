@@ -107,5 +107,41 @@
     "tutorialSteps": 5,
     "mascot": "bija",
     "path": "games/pallanguzhi/"
+  },
+  {
+    "id": "ten-frame-garden",
+    "name": "Ten Frame Garden",
+    "tagline": "Plant seeds, grow flowers",
+    "category": "explorers",
+    "alsoIn": [
+      "little-ones"
+    ],
+    "ageMin": 4,
+    "ageMax": 8,
+    "skills": [
+      "number bonds",
+      "addition",
+      "number sense"
+    ],
+    "players": "1",
+    "minutesPerSession": 4,
+    "accent": "#2f7d32",
+    "icon": "icon.svg",
+    "entry": "index.html",
+    "version": "0.1.0",
+    "goal": "Fill the frame so both parts make 10.",
+    "howToWin": "Tap empty cells to plant seeds until the frame is full. Fill five frames to grow a garden of flowers.",
+    "controls": "tap",
+    "difficulty": [
+      "Dots",
+      "Fill to 10",
+      "Two parts",
+      "Bonds to 20"
+    ],
+    "ruleVariant": "A ten-frame is 2 rows of 5. Dots has no numbers. Fill to 10 and Two parts make 10. Bonds to 20 uses two frames. No timer, no losing.",
+    "about": "Ten frames are a classroom tool that shows how numbers fit together. Pip the sprout helps you see pairs that make 10 and 20.",
+    "tutorialSteps": 5,
+    "mascot": "pip",
+    "path": "games/ten-frame-garden/"
   }
 ]

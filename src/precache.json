@@ -1,5 +1,5 @@
 {
-  "version": "859d318424",
+  "version": "4aa7996420",
   "files": [
     "./",
     "games/chaturanga/css/style.css",
@@ -35,6 +35,15 @@
     "games/pallanguzhi/js/board.js",
     "games/pallanguzhi/js/engine.js",
     "games/pallanguzhi/js/tutorial.js",
+    "games/ten-frame-garden/css/style.css",
+    "games/ten-frame-garden/game.json",
+    "games/ten-frame-garden/icon.svg",
+    "games/ten-frame-garden/index.html",
+    "games/ten-frame-garden/js/app.js",
+    "games/ten-frame-garden/js/board.js",
+    "games/ten-frame-garden/js/engine.js",
+    "games/ten-frame-garden/js/tutorial.js",
+    "games/ten-frame-garden/js/view.js",
     "hub/hub.css",
     "hub/hub.js",
     "icons/apple-touch-icon.png",
