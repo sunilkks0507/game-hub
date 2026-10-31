@@ -107,6 +107,31 @@ Three lines each: what, why, date.
 - 31 Oct 2026: Verified (Dots and Boxes v0.1.0): 125 tests pass (`npm test`); played in Chromium at 360px (tutorial, vs computer to a finished game, two-player 5x5, undo, keyboard arrows, save and continue, hint, rules): no console errors, no horizontal scroll. NOT tested: a real phone, a real child, Hard speed on a slow phone.
 - 31 Oct 2026: Added boards 6x6 to 10x10 (asked by Sunil). Dot gap never goes below 44px, so boards from 7x7 slide sideways inside their frame; the page never scrolls sideways. Hard still only solves the last 19 lines, so on big boards it plays like Medium until the end.
 
+## Fourth game: Ten Frame Garden
+- **Game choice:** Ten Frame Garden (catalogue #2, launch order 1), chosen by Sunil from four options.
+  Highest score (27/30), small build, Common Core K.OA.A.4 anchor, proves the question-bank engine and Little Ones design rules.
+  31 Oct 2026
+
+- **Category and levels:** Explorers primary, also Little Ones, ages 4-8. Four levels: Dots (no numerals), Fill to 10, Two parts, Bonds to 20. All open, no locks.
+  Sunil said to go with the recommendations. A locked level would block a child who is ready, and there are no profiles to unlock against.
+  31 Oct 2026
+
+- **Level picker, mascot, scope:** four big icon buttons on the title flow, no age question. Mascot Pip, a green sprout, silent on the Dots level. Number Line Jumper stays out of v0.1.0.
+  Keeps one game usable from 4 to 8 with no profile and no reading on the youngest level.
+  31 Oct 2026
+
+- **Bonds to 20 range (default, confirm):** only 11 to 19 are asked, so each frame needs 1 to 9 taps. Cells are 64px on levels 1-3 and 52px on level 4 so two frames fit at 360px.
+  Asking 1 to 9 on two frames would need up to 19 taps and tire the child. 52px is still above the 44px minimum and level 4 is for ages 7-8.
+  31 Oct 2026
+
+- **Bond knowledge (default, confirm):** a bond is "known" after 2 frames without a hint; the generator draws unseen bonds first.
+  Practice goes to the weak bonds without a score or a failure state. Device-only, no profile.
+  31 Oct 2026
+
+- **Mockup step kept:** a 360px mockup is built and shown before the engine, because this game is for the youngest children and the tap size and frame layout are the risk.
+  Unlike Pallanguzhi, where the screens were built directly.
+  31 Oct 2026
+
 ## Watching real players
 Notes from watching a new player try each game go here (Step 7 of the workflow).
 
