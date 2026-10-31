@@ -31,12 +31,12 @@ Common: no timer, no failure, a wrong tap gets a friendly nudge, never a penalty
 |---|---|---|---|---|---|
 | 1 | Dots | 4-6 | 1 frame | `given` round seeds (1 to 9) already planted. **No numerals anywhere.** A small tray of dots shows how many more are needed only after Hint. | Plant until the frame is full. Pair shown as two seed groups (round vs leaf) with matching dot counts, no numerals. |
 | 2 | Fill to 10 | 5-8 | 1 frame | `given` round seeds (1 to 9), question "6 + ? = 10", live counter "6 + 1". | Plant until full. Pair shown as "6 + 4 = 10". |
-| 3 | Two parts | 6-8 | 1 frame | Empty frame, a big numeral `target` (1 to 9), "Plant 4". | Plant exactly `target` seeds (leaf shape). Planting one more than the target is refused with a nudge. When `target` is reached, the other `10 - target` cells fill with round auto seeds and the pair shows "4 + 6 = 10". Tapping a planted seed removes it. |
+| 3 | Two parts | 6-8 | 1 frame | Empty frame, a big numeral `target` (1 to 9), "Plant 4". | Plant `target` seeds (leaf shape). The moment `target` is reached (so one seed too many can never be planted), the other `10 - target` cells fill with round auto seeds and the pair shows "4 + 6 = 10". Tapping a planted seed removes it. |
 | 4 | Bonds to 20 | 7-8 | 2 frames | Frame 1 full of given seeds, frame 2 has `given - 10` given seeds, `given` in 11 to 19. Question "14 + ? = 20". | Plant until both frames are full. Pair shown as "14 + 6 = 20". **(default, confirm)** Only 11 to 19 are asked, so every frame needs 1 to 9 taps. |
 
 **Engine functions** (all pure, no DOM, no `Math.random` without a passed `rng`):
 - `createFrame(level, given)` returns a new state. For level 3, `given` is the target.
-- `plant(state, cellId)` returns `{ ok, reason, state }`. Reasons: `filled` (cell not empty), `too_many` (level 3), `done` (frame already complete).
+- `plant(state, cellId)` returns `{ ok, reason, state }`. Reasons: `filled` (cell not empty), `range` (no such cell), `done` (frame already complete).
 - `unplant(state, cellId)` removes a child's seed (value 2) only; given seeds cannot be removed. Used by Undo and level 3 taps.
 - `isComplete(state)`, `needed(state)` (how many seeds still to plant), `pair(state)` returns `[a, b, total]`.
 - `bondKey(level, given)` returns the bond id (see section 8).
@@ -52,7 +52,7 @@ A **garden** is 5 frames at the chosen level.
 
 ## 8. Bond knowledge (stats)
 - A **bond** is one value in the range of a level group: group "10" has bonds 1 to 9 (shared by levels 1, 2 and 3); group "20" has bonds 11 to 19.
-- Status per bond: `0` unseen, `1` seen, `2` known. A frame completes a bond as `seen`. It becomes `known` after **2 frames of that bond completed without Hint**. Undo does not count against the child.
+- Status per bond: `0` unseen, `1` seen, `2` known. A frame completes a bond as `seen`. It becomes `known` after **2 frames of that bond completed without Hint** (counted in `stats.clean`, 0 to 2 per bond). Undo does not count against the child.
 - Stored as `stats.bonds = { "10": [9 numbers], "20": [9 numbers] }`, plus `frames` (total frames done), `gardens` (gardens finished), `noHintGardens`.
 - No claims such as "boosts intelligence" appear anywhere.
 
@@ -102,7 +102,7 @@ Behind the same addition question gate as Pallanguzhi (for example 12 + 27). Sho
 
 ## 18. Done means
 - [ ] Engine rules match section 6; tests pass (`node --test`)
-- [ ] `createFrame`/`plant`/`unplant`/`pair` right for all four levels; level 3 refuses the (target + 1)th seed
+- [ ] `createFrame`/`plant`/`unplant`/`pair` right for all four levels; level 3 completes at the target and fills the rest with auto seeds
 - [ ] Every frame's pair sums to 10 (levels 1-3) or 20 (level 4)
 - [ ] `makeGarden` returns 5 values in range, no consecutive repeats, no repeat while unused values remain, weights unseen bonds first (seeded test)
 - [ ] `recordFrame` marks bonds seen then known after 2 hint-free frames
