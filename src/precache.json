@@ -1,5 +1,5 @@
 {
-  "version": "a17bd4a905",
+  "version": "5f968a312c",
   "files": [
     "./",
     "games/chaturanga/css/style.css",
@@ -24,6 +24,16 @@
     "games/dots-and-boxes/js/engine.js",
     "games/dots-and-boxes/js/tutorial.js",
     "games/games.json",
+    "games/gomoku/css/style.css",
+    "games/gomoku/game.json",
+    "games/gomoku/icon.svg",
+    "games/gomoku/index.html",
+    "games/gomoku/js/ai.js",
+    "games/gomoku/js/ai.worker.js",
+    "games/gomoku/js/app.js",
+    "games/gomoku/js/board.js",
+    "games/gomoku/js/engine.js",
+    "games/gomoku/js/tutorial.js",
     "games/huli-meke/css/styles.css",
     "games/huli-meke/data/boards.json",
     "games/huli-meke/game.json",

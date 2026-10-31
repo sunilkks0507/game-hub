@@ -132,6 +132,31 @@ Three lines each: what, why, date.
   Unlike Pallanguzhi, where the screens were built directly.
   31 Oct 2026
 
+## Fifth game: Five in a Row (Gomoku)
+- **Game choice and workflow:** Five in a Row (catalogue #87). Sunil asked for games like Pebble Pals, Dots and Boxes and Huli Meke, and picked Gomoku, Reversi and Hex, each on its own branch and pull request (`feat/gomoku`).
+  One chat per game. The PR replaces "push to main" in step 6; the live check happens after Sunil merges.
+  31 Oct 2026
+
+- **Category and name:** Family primary, also Challengers and Adults, ages 8 and up. Shown as "Five in a Row" with "Gomoku" as the other name. Mascot Mani, a bead on a string.
+  Both names are traditional and generic; trademark status was not checked in any registry.
+  31 Oct 2026
+
+- **Boards and placing (default, confirm):** 9x9 (default), 13x13, 15x15. Preview-then-place on every size: first tap shows a ghost stone, second tap or the Place button places it. "One tap to place" is a setting.
+  The point gap at 360px is only about 36px on 9x9, 25px on 13x13 and 22px on 15x15, all under the 44px rule. The brief said about 40px on 9x9; that was too generous, so preview applies to 9x9 too.
+  31 Oct 2026
+
+- **Rule set (default, confirm):** free-style. Five or more in a row wins, no forbidden moves, full board is a draw.
+  The "exactly five" rule is harder to explain to children. Free-style gives the first player an advantage, which Fair start offsets.
+  31 Oct 2026
+
+- **Fair start (default, confirm):** optional swap, off by default. After Black's first stone the second seat can play on or swap sides. The bot swaps if the stone is within `floor(n/4)` steps of the centre; as first seat it opens exactly `floor(n/4)+1` steps out.
+  Opening-rule balance was not researched, so this is an editorial choice to check in play.
+  31 Oct 2026
+
+- **Bot levels (default, confirm):** Easy plays a random nearby point 30% of the time and blocks a four 70% of the time; Medium always blocks fours and open threes; Hard adds a search for forced wins made of fours, then alpha-beta within 1.5 s.
+  Easy must be beatable by a child. Phone timings are not measured.
+  31 Oct 2026
+
 ## Watching real players
 Notes from watching a new player try each game go here (Step 7 of the workflow).
 
@@ -171,3 +196,6 @@ Known gaps against GAME_ONBOARDING_STANDARD, not fixed in this step: no grown-up
 
 ## 2026-10-31 Verified (Pebble Pals in the hub)
 Live at https://sunilkks0507.github.io/game-hub/games/pebble-pals/index.html. 207 tests pass and gate the deploy (7 are Pebble Pals' first engine tests). Local Chromium at 360px: page loads with no outside requests and no errors, old muted choice and old stats carried over, no horizontal scroll. Live (Chrome): service worker active, 12 Pebble Pals files precached, network hub list shows 6 games. Note: a browser that already has the hub shows the old game list on the first load after a deploy, then the new one after the new service worker takes over. NOT tested: a full game played, a real phone, offline reload on the live URL, a real child (Step 7).
+
+## 2026-10-31 Verified (Five in a Row, before merge)
+Built on branch `feat/gomoku`; pull request open, not yet merged, so there is no live URL check yet. 250 repo tests pass (43 are Gomoku's: rules in four directions and at edges, six and seven in a row, draw, Fair start, bot levels, tutorial positions). Local Chromium at 360px, all three board sizes: no horizontal scroll, no console errors, preview-then-place by tap and by keyboard (Place button 48px tall), tutorial all five steps including the missed block, Fair start swap (bot opens, human swaps), a full game vs Easy to the result screen with its reason and two badges, Undo, Hint, continue after reload, two-player pass-the-phone text, One tap to place, Hard bot replies in about 0.5 to 0.8 s on 15x15, and offline reload with a play-through using the service worker. NOT tested: the live GitHub Pages URL (after merge), a real phone (the 22px point gap on 15x15 relies on the preview step), Hard speed on a slow phone, a screen reader, a real player (Step 7 stays unticked).

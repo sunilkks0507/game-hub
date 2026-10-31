@@ -1,0 +1,328 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Five in a Row (Gomoku): mockup (Step 3)</title>
+<style>
+/* ---- Shared hub tokens (copied from src/shared/tokens.css); Five in a Row overrides only the accent ---- */
+:root {
+  --bg: #faf7f2; --surface: #ffffff; --text: #1f1a17; --text-muted: #5c524b; --line: #d9cfc4;
+  --accent: #6b3fa0; --accent-text: #ffffff;
+  --ok: #1b6e3a; --warn: #8a5a00; --danger: #a3221b; --focus: #1d4ed8;
+  --radius: 12px; --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px; --space-6: 32px;
+  --tap: 44px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Game-only colours */
+  --board: #e3c58d; --board-line: #5a4326; --stone-black: #1f1a17; --stone-white: #fffdf8;
+  --glow: #ffb300; --string: #8a6d3b;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: #e6e0d6; color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.5; padding: 16px; }
+h1.page { font-size: 1.3rem; margin: 0 0 4px; }
+p.lead { margin: 0 0 8px; color: var(--text-muted); max-width: 72ch; }
+.toggle { display: inline-flex; align-items: center; gap: 8px; margin: 4px 0 16px; font-weight: 600; min-height: 44px; }
+.toggle input { width: 22px; height: 22px; }
+.frames { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+figure { margin: 0; }
+figcaption { font-weight: 700; margin-bottom: 6px; max-width: 360px; }
+figcaption small { display: block; font-weight: 400; color: var(--text-muted); }
+.phone { width: 360px; min-height: 640px; background: var(--bg); border: 2px solid #1f1a17; border-radius: 22px; overflow: hidden; position: relative; padding-bottom: 16px; }
+h1, h2 { line-height: 1.2; margin: 0 0 var(--space-2); }
+p { margin: 0 0 var(--space-3); }
+
+/* Buttons (from base.css) */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--tap); min-width: var(--tap); padding: 0 16px;
+  border: 2px solid var(--accent); border-radius: var(--radius); background: var(--surface); color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; }
+.btn-primary { background: var(--accent); color: var(--accent-text); }
+.btn-quiet { border-color: var(--line); color: var(--text); }
+.btn-block { display: flex; width: 100%; }
+.btn-place { min-height: 52px; font-size: 1.05rem; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; }
+.row .btn { flex: 1 1 auto; }
+.chip { display: inline-flex; align-items: center; gap: 6px; min-height: var(--tap); padding: 0 14px; border: 2px solid var(--line); border-radius: 999px;
+  background: var(--surface); color: var(--text); font: inherit; font-weight: 600; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: var(--accent-text); }
+
+/* Title */
+.title-screen { display: flex; flex-direction: column; align-items: center; padding: 36px 16px 24px; text-align: center; }
+.title-screen h1 { font-size: 2rem; margin: 8px 0 4px; }
+.tagline { color: var(--text-muted); margin-bottom: 12px; }
+.goal-sentence { font-size: 1.1rem; font-weight: 600; margin-bottom: 24px; }
+.title-actions { display: grid; gap: 8px; width: 100%; }
+.fine-print { margin-top: 24px; color: var(--text-muted); font-size: 0.95rem; }
+.mani-big { width: 150px; height: 90px; }
+.mani-small { width: 74px; height: 44px; flex: none; }
+
+/* Setup */
+.setup { padding: 12px 16px; }
+.setup h2 { font-size: 1.2rem; margin-top: 8px; }
+.setup .group { margin-bottom: 12px; }
+.setup .label { font-weight: 700; margin-bottom: 4px; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.switch-row { display: flex; align-items: center; gap: 12px; min-height: var(--tap); padding: 8px 12px; border: 2px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+.switch-row .txt { flex: 1; }
+.switch-row small { display: block; color: var(--text-muted); }
+.switch { width: 52px; height: 32px; border-radius: 999px; background: #8f857c; position: relative; flex: none; border: 2px solid #5c524b; }
+.switch::after { content: ''; position: absolute; top: 2px; left: 2px; width: 24px; height: 24px; border-radius: 50%; background: #fff; }
+.switch.on { background: var(--accent); border-color: var(--accent); }
+.switch.on::after { left: 22px; }
+
+/* Play */
+.play-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; }
+.play-title { margin: 0; font-size: 1.15rem; }
+.goal-line { margin: 0; padding: 0 16px; color: var(--text-muted); text-align: center; }
+.score { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 8px 16px 0; }
+.who { display: flex; align-items: center; gap: 8px; padding: 6px 10px; border: 2px solid var(--line); border-radius: var(--radius); background: var(--surface); font-weight: 700; min-height: 48px; }
+.who.turn { border-width: 3px; border-color: var(--accent); }
+.who.turn .name::before { content: '\25B6\00a0'; }
+.who small { display: block; font-weight: 400; color: var(--text-muted); line-height: 1.1; }
+.status { margin: 8px 16px; min-height: var(--tap); display: flex; align-items: center; justify-content: center; border-radius: var(--radius); background: var(--surface); border: 2px solid var(--line); font-weight: 700; text-align: center; padding: 4px 8px; }
+.status.alert { border-color: var(--warn); }
+.board-wrap { padding: 0 16px; }
+svg.board { display: block; width: 328px; height: 328px; overflow: visible; }
+.place-row { padding: 12px 16px 0; }
+.controls { display: flex; gap: 8px; padding: 8px 16px 0; }
+.controls .btn { flex: 1 1 0; padding: 0 6px; }
+.icon-btn { padding: 0; width: var(--tap); }
+
+/* Mascot bubble + tutorial */
+.bubble-row { display: flex; align-items: flex-end; gap: 10px; padding: 8px 16px; }
+.bubble { position: relative; flex: 1; background: var(--surface); border: 2px solid var(--line); border-radius: var(--radius); padding: 8px 12px; font-weight: 600; }
+.bubble::before { content: ''; position: absolute; left: -9px; bottom: 14px; width: 14px; height: 14px; background: var(--surface); border-left: 2px solid var(--line); border-bottom: 2px solid var(--line); transform: rotate(45deg); }
+.steps { display: flex; gap: 6px; justify-content: center; padding: 4px 0 0; }
+.steps span { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--accent); }
+.steps span.on { background: var(--accent); }
+.tut-actions { display: flex; gap: 8px; padding: 12px 16px 0; }
+.tut-actions .btn { flex: 1; }
+
+/* Dialog cards over a dimmed board */
+.dim { position: absolute; inset: 0; background: rgba(31,26,23,.55); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.dialog { width: 100%; background: var(--surface); border-radius: var(--radius); padding: 16px; box-shadow: 0 10px 40px rgba(0,0,0,.35); }
+.dialog h2 { font-size: 1.25rem; }
+.dialog-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.dialog-actions .btn { flex: 1 1 auto; }
+.badge-line { display: flex; align-items: center; gap: 8px; padding: 8px 12px; border-radius: var(--radius); background: #efe6f8; border: 2px solid var(--accent); font-weight: 700; margin-top: 8px; }
+.muted { color: var(--text-muted); }
+.rules-card { padding: 16px; }
+.rules-card h2 { font-size: 1.2rem; }
+.rules-card ul { margin: 0 0 12px; padding-left: 20px; }
+.rules-card li { margin-bottom: 6px; }
+
+/* Board bits */
+.glow { animation: pulse 1.2s ease-in-out infinite; transform-box: fill-box; transform-origin: center; }
+@keyframes pulse { 0%, 100% { opacity: .55; } 50% { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { .glow { animation: none; } }
+.hits .hit-cell { display: block; }
+.hit-cell { display: none; }
+.stone-key { display: inline-block; vertical-align: middle; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+</style>
+</head>
+<body>
+
+<!-- Mani: a bead on a string, original SVG -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="mani" viewBox="0 0 100 60">
+    <line x1="6" y1="30" x2="94" y2="30" stroke="#8a6d3b" stroke-width="4" stroke-linecap="round"/>
+    <circle cx="6" cy="30" r="5" fill="#8a6d3b"/><circle cx="94" cy="30" r="5" fill="#8a6d3b"/>
+    <circle cx="50" cy="30" r="26" fill="#6b3fa0"/>
+    <ellipse cx="40" cy="18" rx="9" ry="5" fill="#fff" opacity=".3"/>
+    <circle cx="42" cy="29" r="5" fill="#fff"/><circle cx="58" cy="29" r="5" fill="#fff"/>
+    <circle cx="43" cy="30" r="2.4" fill="#1f1a17"/><circle cx="59" cy="30" r="2.4" fill="#1f1a17"/>
+    <path d="M42 40 Q50 47 58 40" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<h1 class="page">Five in a Row (Gomoku): mockup, Step 3</h1>
+<p class="lead">Eight 360px screens with the shared hub tokens (accent <code>#6b3fa0</code>, 7.4:1 against white). This is a picture only: no game logic. The point gap at 360px is about 36px on 9x9, 25px on 13x13 and 22px on 15x15, so a bare tap is too small and every board uses preview-then-place.</p>
+<label class="toggle"><input type="checkbox" id="hits"> Show the real tap area of every point (one grid cell)</label>
+
+<div class="frames" id="frames">
+
+<figure>
+  <figcaption>1. Title<small>Mascot, name, goal in one sentence, Play, How to play, sound, Home.</small></figcaption>
+  <div class="phone"><div class="title-screen">
+    <svg class="mani-big" role="img" aria-label="Mani, a purple bead on a string"><use href="#mani"/></svg>
+    <h1>Five in a Row</h1>
+    <div class="tagline">Also called Gomoku</div>
+    <div class="goal-sentence">Make five stones in a row before your rival does.</div>
+    <div class="title-actions">
+      <button class="btn btn-primary btn-block">Continue game</button>
+      <button class="btn btn-block">New game</button>
+      <button class="btn btn-quiet btn-block">How to play</button>
+      <div class="row"><button class="btn btn-quiet">Sound: on</button><button class="btn btn-quiet">Settings</button><button class="btn btn-quiet">All games</button></div>
+    </div>
+    <div class="fine-print">Works offline. Nothing is collected.</div>
+  </div></div>
+</figure>
+
+<figure>
+  <figcaption>2. Setup<small>Opponent, board, level, colour, and the Fair start switch.</small></figcaption>
+  <div class="phone"><div class="setup">
+    <h2>New game</h2>
+    <div class="group"><div class="label">Play against</div><div class="chips"><button class="chip" aria-pressed="true">Computer</button><button class="chip" aria-pressed="false">A friend, same phone</button></div></div>
+    <div class="group"><div class="label">Board</div><div class="chips"><button class="chip" aria-pressed="true">9 x 9</button><button class="chip" aria-pressed="false">13 x 13</button><button class="chip" aria-pressed="false">15 x 15</button></div></div>
+    <div class="group"><div class="label">Computer level</div><div class="chips"><button class="chip" aria-pressed="false">Easy</button><button class="chip" aria-pressed="true">Medium</button><button class="chip" aria-pressed="false">Hard</button></div></div>
+    <div class="group"><div class="label">You play</div><div class="chips">
+      <button class="chip" aria-pressed="true"><svg class="stone-key" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="#1f1a17"/><circle cx="8" cy="7" r="2.5" fill="#fff" opacity=".35"/></svg> Black (first)</button>
+      <button class="chip" aria-pressed="false"><svg class="stone-key" width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><circle cx="11" cy="11" r="9" fill="#fffdf8" stroke="#1f1a17" stroke-width="2"/><circle cx="11" cy="11" r="4" fill="none" stroke="#1f1a17" stroke-width="1.5"/></svg> White (second)</button></div></div>
+    <div class="group"><div class="switch-row"><div class="txt"><strong>Fair start</strong><small>After Black's first stone, White can swap sides.</small></div><div class="switch" role="img" aria-label="Off"></div></div></div>
+    <button class="btn btn-primary btn-block" style="min-height:52px">Start</button>
+  </div></div>
+</figure>
+
+<figure>
+  <figcaption>3. Play, 9x9<small>Black to move. White has four with one open end, shown with a "!" badge. A ghost stone sits on the blocking point; the Place button confirms.</small></figcaption>
+  <div class="phone">
+    <div class="play-header"><button class="btn btn-quiet icon-btn" aria-label="Home">&#8962;</button><h1 class="play-title">Five in a Row</h1><button class="btn btn-quiet icon-btn" aria-label="Menu">&#9776;</button></div>
+    <p class="goal-line">Make 5 in a row</p>
+    <div class="score">
+      <div class="who turn"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="#1f1a17"/></svg><div><span class="name">You</span><small>Black</small></div></div>
+      <div class="who"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="#fffdf8" stroke="#1f1a17" stroke-width="2"/><circle cx="13" cy="13" r="5" fill="none" stroke="#1f1a17" stroke-width="1.5"/></svg><div><span class="name">Computer</span><small>White</small></div></div>
+    </div>
+    <div class="status alert">White has four. Block the open end at H5!</div>
+    <div class="board-wrap" data-board='{"n":9,"black":[[2,4],[3,3],[5,3],[4,5],[3,5],[6,6]],"white":[[3,4],[4,4],[5,4],[6,4],[4,3],[6,2]],"last":[6,4],"ghost":[7,4],"ghostColor":"black","badges":[[7,4,"!"]]}'></div>
+    <div class="place-row"><button class="btn btn-primary btn-block btn-place">Place stone at H5</button></div>
+    <div class="controls"><button class="btn btn-quiet">Undo</button><button class="btn btn-quiet">Hint</button><button class="btn btn-quiet" aria-label="Rules">?</button><button class="btn btn-quiet">Menu</button></div>
+  </div>
+</figure>
+
+<figure>
+  <figcaption>4. Play, 15x15<small>Same layout on the biggest board. The gap is only about 22px, so the ghost's 22px halo stays visible beside a thumb. Tick the box above to see the real tap areas.</small></figcaption>
+  <div class="phone">
+    <div class="play-header"><button class="btn btn-quiet icon-btn" aria-label="Home">&#8962;</button><h1 class="play-title">Five in a Row</h1><button class="btn btn-quiet icon-btn" aria-label="Menu">&#9776;</button></div>
+    <p class="goal-line">Make 5 in a row</p>
+    <div class="score">
+      <div class="who"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="#1f1a17"/></svg><div><span class="name">You</span><small>Black</small></div></div>
+      <div class="who turn"><svg width="26" height="26" viewBox="0 0 26 26" aria-hidden="true"><circle cx="13" cy="13" r="11" fill="#fffdf8" stroke="#1f1a17" stroke-width="2"/><circle cx="13" cy="13" r="5" fill="none" stroke="#1f1a17" stroke-width="1.5"/></svg><div><span class="name">Friend</span><small>White</small></div></div>
+    </div>
+    <div class="status">Friend's turn, White. Move 16</div>
+    <div class="board-wrap" data-board='{"n":15,"black":[[7,7],[8,6],[6,8],[9,5],[7,9],[8,8],[5,7],[6,9]],"white":[[8,7],[7,8],[6,7],[7,6],[9,7],[6,6],[8,9]],"last":[6,9],"ghost":[10,4],"ghostColor":"white"}'></div>
+    <div class="place-row"><button class="btn btn-primary btn-block btn-place">Place stone at K5</button></div>
+    <div class="controls"><button class="btn btn-quiet">Undo</button><button class="btn btn-quiet" disabled style="opacity:.45">Hint</button><button class="btn btn-quiet" aria-label="Rules">?</button><button class="btn btn-quiet">Menu</button></div>
+  </div>
+</figure>
+
+<figure>
+  <figcaption>5. Fair start: play on or swap<small>Only after the first stone, only when Fair start is on.</small></figcaption>
+  <div class="phone">
+    <div class="play-header"><button class="btn btn-quiet icon-btn" aria-label="Home">&#8962;</button><h1 class="play-title">Five in a Row</h1><button class="btn btn-quiet icon-btn" aria-label="Menu">&#9776;</button></div>
+    <p class="goal-line">Make 5 in a row</p>
+    <div class="board-wrap" style="margin-top:12px" data-board='{"n":9,"black":[[3,3]],"white":[],"last":[3,3]}'></div>
+    <div class="dim" style="align-items:flex-end"><div class="dialog">
+      <h2>Play on, or swap?</h2>
+      <p>Black placed the first stone at D4. You can play on as White, or swap sides and take the Black stone.</p>
+      <div class="dialog-actions"><button class="btn btn-primary">Play on as White</button><button class="btn">Swap: take Black</button></div>
+    </div></div>
+  </div>
+</figure>
+
+<figure>
+  <figcaption>6. Tutorial, step 3 of 5<small>After the child makes four, both ends glow: the rival can block only one. Mani speaks. Step 4 (block a four) uses the same layout with one glowing end.</small></figcaption>
+  <div class="phone">
+    <div class="play-header"><button class="btn btn-quiet icon-btn" aria-label="Home">&#8962;</button><h1 class="play-title">How to play</h1><span style="width:44px"></span></div>
+    <div class="bubble-row"><svg class="mani-small" role="img" aria-label="Mani"><use href="#mani"/></svg><div class="bubble">Two open ends. They can only block one!</div></div>
+    <div class="board-wrap" data-board='{"n":9,"black":[[2,4],[3,4],[4,4],[5,4]],"white":[[3,3],[4,5],[5,5]],"last":[5,4],"glows":[[1,4],[6,4]]}'></div>
+    <div class="steps" style="padding-top:12px"><span class="on"></span><span class="on"></span><span class="on"></span><span></span><span></span></div>
+    <div class="tut-actions"><button class="btn btn-quiet">Skip</button><button class="btn btn-quiet">Back</button><button class="btn btn-primary" disabled style="opacity:.45">Next</button></div>
+  </div>
+</figure>
+
+<figure>
+  <figcaption>7. Result, a win<small>Says why. The five is marked with a line and rings, not colour alone. A badge appears when earned.</small></figcaption>
+  <div class="phone">
+    <div class="play-header"><button class="btn btn-quiet icon-btn" aria-label="Home">&#8962;</button><h1 class="play-title">Five in a Row</h1><button class="btn btn-quiet icon-btn" aria-label="Menu">&#9776;</button></div>
+    <p class="goal-line">Make 5 in a row</p>
+    <div class="board-wrap" style="margin-top:12px" data-board='{"n":9,"black":[[2,3],[3,3],[4,3],[5,3],[6,3],[4,1],[3,5]],"white":[[1,3],[3,2],[4,4],[5,4],[4,2],[2,4]],"last":[6,3],"win":[[2,3],[3,3],[4,3],[5,3],[6,3]]}'></div>
+    <div class="dim" style="align-items:flex-end"><div class="dialog">
+      <h2>You won!</h2>
+      <p>You won on move 13 with five across. You made an open four, so your rival could not block both ends.</p>
+      <p class="muted">9x9, Medium: won 3 of 7.</p>
+      <div class="badge-line"><span aria-hidden="true">&#9733;</span> New badge: Win with an open four</div>
+      <div class="dialog-actions"><button class="btn btn-primary">Play again</button><button class="btn">How to play</button><button class="btn btn-quiet">Home</button></div>
+    </div></div>
+  </div>
+</figure>
+
+<figure>
+  <figcaption>8. "?" rules card<small>One screen, no scrolling at 360px. States the rule set used.</small></figcaption>
+  <div class="phone"><div class="rules-card">
+    <div class="bubble-row" style="padding:0 0 8px"><svg class="mani-small" role="img" aria-label="Mani"><use href="#mani"/></svg><h2 style="margin:0">Rules</h2></div>
+    <ul>
+      <li><strong>Goal:</strong> make five or more of your stones in an unbroken line: across, down or diagonal.</li>
+      <li><strong>Your turn:</strong> tap a point to preview, tap it again (or press Place) to put a stone there. Stones never move.</li>
+      <li><strong>Win:</strong> first to five or more. If the board fills up, it is a draw.</li>
+      <li><strong>Tip:</strong> block a four at once. Make two threats together and your rival cannot stop both.</li>
+    </ul>
+    <p class="muted"><strong>Rule set:</strong> free-style. Six or more in a row also wins. Fair start: off.</p>
+    <button class="btn btn-primary btn-block">Back to the game</button>
+  </div></div>
+</figure>
+
+</div>
+
+<script>
+(function () {
+  var S = 328;
+  function star(n) {
+    if (n === 9) return [[2,2],[6,2],[2,6],[6,6],[4,4]];
+    if (n === 13) return [[3,3],[9,3],[3,9],[9,9],[6,6]];
+    return [[3,3],[11,3],[3,11],[11,11],[7,7]];
+  }
+  function draw(spec) {
+    var n = spec.n, gap = S / n, r = gap * 0.44;
+    function px(c) { return gap * (c + 0.5); }
+    var s = '<svg class="board" viewBox="0 0 ' + S + ' ' + S + '" role="img" aria-label="Board, ' + n + ' by ' + n + ' points">';
+    s += '<rect x="1" y="1" width="' + (S - 2) + '" height="' + (S - 2) + '" rx="10" fill="var(--board)" stroke="var(--board-line)" stroke-width="2"/>';
+    for (var i = 0; i < n; i++) {
+      s += '<line x1="' + px(0) + '" y1="' + px(i) + '" x2="' + px(n - 1) + '" y2="' + px(i) + '" stroke="var(--board-line)" stroke-width="1.2"/>';
+      s += '<line x1="' + px(i) + '" y1="' + px(0) + '" x2="' + px(i) + '" y2="' + px(n - 1) + '" stroke="var(--board-line)" stroke-width="1.2"/>';
+    }
+    star(n).forEach(function (p) { s += '<circle cx="' + px(p[0]) + '" cy="' + px(p[1]) + '" r="' + Math.max(2.5, gap * 0.09) + '" fill="var(--board-line)"/>'; });
+    // tap areas (shown by the checkbox)
+    for (var a = 0; a < n; a++) for (var b = 0; b < n; b++) {
+      s += '<rect class="hit-cell" x="' + (b * gap) + '" y="' + (a * gap) + '" width="' + gap + '" height="' + gap + '" fill="rgba(107,63,160,.08)" stroke="rgba(107,63,160,.6)" stroke-dasharray="3 2" stroke-width="1"/>';
+    }
+    function stone(c, rr, color, opacity) {
+      var x = px(c[0]), y = px(c[1]), o = opacity ? ' opacity="' + opacity + '"' : '';
+      if (color === 'black') {
+        return '<g' + o + '><circle cx="' + x + '" cy="' + y + '" r="' + rr + '" fill="var(--stone-black)" stroke="#000" stroke-width="2"/><ellipse cx="' + (x - rr * 0.3) + '" cy="' + (y - rr * 0.35) + '" rx="' + (rr * 0.3) + '" ry="' + (rr * 0.16) + '" fill="#fff" opacity=".25"/></g>';
+      }
+      return '<g' + o + '><circle cx="' + x + '" cy="' + y + '" r="' + rr + '" fill="var(--stone-white)" stroke="var(--stone-black)" stroke-width="2"/><circle cx="' + x + '" cy="' + y + '" r="' + (rr * 0.42) + '" fill="none" stroke="var(--stone-black)" stroke-width="' + Math.max(1.4, gap * 0.05) + '"/></g>';
+    }
+    (spec.black || []).forEach(function (c) { s += stone(c, r, 'black'); });
+    (spec.white || []).forEach(function (c) { s += stone(c, r, 'white'); });
+    if (spec.last) { // small square marker on the last stone
+      var isBlack = (spec.black || []).some(function (c) { return c[0] === spec.last[0] && c[1] === spec.last[1]; });
+      var q = Math.max(4, gap * 0.2);
+      s += '<rect x="' + (px(spec.last[0]) - q / 2) + '" y="' + (px(spec.last[1]) - q / 2) + '" width="' + q + '" height="' + q + '" fill="' + (isBlack ? '#fff' : 'var(--stone-black)') + '"/>';
+    }
+    if (spec.win) {
+      var f = spec.win[0], l = spec.win[spec.win.length - 1];
+      s += '<line x1="' + px(f[0]) + '" y1="' + px(f[1]) + '" x2="' + px(l[0]) + '" y2="' + px(l[1]) + '" stroke="#fff" stroke-width="9" stroke-linecap="round" opacity=".85"/>';
+      s += '<line x1="' + px(f[0]) + '" y1="' + px(f[1]) + '" x2="' + px(l[0]) + '" y2="' + px(l[1]) + '" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/>';
+      spec.win.forEach(function (c) { s += '<circle cx="' + px(c[0]) + '" cy="' + px(c[1]) + '" r="' + (r + 3) + '" fill="none" stroke="var(--accent)" stroke-width="3"/>'; });
+    }
+    (spec.glows || []).forEach(function (g) {
+      s += '<circle class="glow" cx="' + px(g[0]) + '" cy="' + px(g[1]) + '" r="' + (gap * 0.52) + '" fill="rgba(255,179,0,.3)" stroke="var(--glow)" stroke-width="3"/>';
+    });
+    if (spec.ghost) {
+      var gx = px(spec.ghost[0]), gy = px(spec.ghost[1]), halo = Math.max(22, r + 8);
+      s += '<circle cx="' + gx + '" cy="' + gy + '" r="' + halo + '" fill="rgba(107,63,160,.14)" stroke="var(--accent)" stroke-width="2" stroke-dasharray="5 3"/>';
+      s += stone(spec.ghost, r, spec.ghostColor || 'black', 0.6);
+    }
+    (spec.badges || []).forEach(function (b) {
+      var bx = px(b[0]) + r * 0.85, by = px(b[1]) - r * 0.85;
+      var plus = b[2] === '+';
+      s += '<circle cx="' + bx + '" cy="' + by + '" r="10" fill="' + (plus ? '#1b6e3a' : '#ffb300') + '" stroke="#1f1a17" stroke-width="1.5"/>';
+      s += '<text x="' + bx + '" y="' + (by + 4.5) + '" text-anchor="middle" font-size="14" font-weight="700" fill="' + (plus ? '#fff' : '#1f1a17') + '" font-family="system-ui, sans-serif">' + b[2] + '</text>';
+    });
+    return s + '</svg>';
+  }
+  document.querySelectorAll('[data-board]').forEach(function (el) { el.innerHTML = draw(JSON.parse(el.getAttribute('data-board'))); });
+  document.getElementById('hits').addEventListener('change', function (e) { document.getElementById('frames').classList.toggle('hits', e.target.checked); });
+})();
+</script>
+</body>
+</html>
