@@ -34,6 +34,7 @@ export function createTutorial({ ui, sound, createBoard, onFinish, onPractice })
   let locked = false;
   let token = 0;
   let timer = null;
+  let owners = []; // who drew each line, for colour
 
   const view = () => ({ n: N, edges: state.edges, owner: state.owner });
 
@@ -42,6 +43,7 @@ export function createTutorial({ ui, sound, createBoard, onFinish, onPractice })
       enabled: Boolean(extra.enabled),
       glow: extra.glow || new Set(),
       warn: extra.warn || new Set(),
+      owners,
       last: extra.last,
       names: ['You', 'Rival'],
     });
@@ -79,6 +81,8 @@ export function createTutorial({ ui, sound, createBoard, onFinish, onPractice })
     ui.next.disabled = isMove;
     ui.practice.hidden = !isPractice;
     state = isMove ? scenarioState(s.scenario) : fromEdges(N, [], 0);
+    owners = [];
+    if (isMove) SCENARIOS[s.scenario].edges.forEach((e, i) => { owners[e] = i % 2; });
     if (isMove) paint({ enabled: true, glow: new Set([SCENARIOS[s.scenario].target]) });
     else paint();
     ui.text.focus();
@@ -103,6 +107,7 @@ export function createTutorial({ ui, sound, createBoard, onFinish, onPractice })
       // The child gave a box away: show the rival taking it, then try again.
       tries += 1;
       applyMove(state, edge);
+      owners[edge] = 0;
       sound.play('line');
       locked = true;
       paint({ last: edge });
@@ -112,7 +117,9 @@ export function createTutorial({ ui, sound, createBoard, onFinish, onPractice })
         if (mine !== token) return;
         const taken = availableBoxes(state);
         if (taken.length) {
-          applyMove(state, missingEdge(state, taken[0]));
+          const take = missingEdge(state, taken[0]);
+          applyMove(state, take);
+          owners[take] = 1;
           sound.play('box', 0);
         }
         state.owner = state.owner.slice();
@@ -128,6 +135,8 @@ export function createTutorial({ ui, sound, createBoard, onFinish, onPractice })
         timer = setTimeout(() => {
           if (mine !== token) return;
           state = scenarioState('trap');
+          owners = [];
+          SCENARIOS.trap.edges.forEach((e, i) => { owners[e] = i % 2; });
           locked = false;
           paint({ enabled: true, glow: new Set([scn.target]), warn: dangerLines() });
           setFeedback('Try the glowing line.', 'nudge');
@@ -144,6 +153,7 @@ export function createTutorial({ ui, sound, createBoard, onFinish, onPractice })
 
     const result = applyMove(state, edge);
     if (!result) return;
+    owners[edge] = 0;
     sound.play('line');
     if (s.scenario === 'draw') {
       finishStep('Nice! One line drawn. Players take turns.', edge);

@@ -169,6 +169,18 @@ function turnText(s) {
   return `${again}${again ? 'tap a dotted line.' : 'Your turn: tap a dotted line.'}`;
 }
 
+// Who drew each line, worked out by replaying the moves.
+function lineOwners(s) {
+  const g = newGame({ n: s.n, first: s.first });
+  const owners = [];
+  for (const e of s.moves) {
+    const mover = g.turn;
+    if (!applyMove(g, e)) break;
+    owners[e] = mover;
+  }
+  return owners;
+}
+
 function render() {
   const s = session;
   const names = namesFor(s);
@@ -176,7 +188,7 @@ function render() {
   const warn = new Set();
   if (enabled && helperOn(s)) for (const e of legalMoves(s.state)) if (moveKind(s.state, e) === 'danger') warn.add(e);
   board.render({ n: s.n, edges: s.state.edges, owner: s.state.owner }, {
-    enabled, hint: s.hint, warn, last: s.moves.length ? s.moves[s.moves.length - 1] : undefined, names,
+    enabled, hint: s.hint, warn, owners: lineOwners(s), last: s.moves.length ? s.moves[s.moves.length - 1] : undefined, names,
   });
 
   for (const p of [0, 1]) {

@@ -6,6 +6,7 @@
 //     hint: edgeId,               amber glow (Hint button)
 //     glow: Set of edge ids,      amber glow (tutorial)
 //     warn: Set of edge ids,      small "!" badge: this line would give a box away
+//     owners: array, who drew each line (0 or 1), to colour the lines,
 //     last: edgeId,               the line drawn most recently
 //     names: ['You', 'Rival'],    for screen readers
 //   });
@@ -177,6 +178,9 @@ export function createBoard(root, { onTap }) {
       const line = lines[e];
       const fresh = prev && drawn && prev.edges[e] !== 1;
       line.classList.toggle('drawn', drawn);
+      const who = drawn && opts.owners ? opts.owners[e] : undefined;
+      line.classList.toggle('by-0', who === 0);
+      line.classList.toggle('by-1', who === 1);
       line.classList.toggle('fresh', Boolean(fresh));
       line.classList.toggle('last', opts.last === e);
       const lit = !drawn && (opts.hint === e || glow.has(e));
