@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ten Frame Garden: mockup (Step 3)</title>
+<style>
+/* ---- Shared hub tokens (copied from src/shared/tokens.css); Ten Frame Garden overrides only the accent ---- */
+:root {
+  --bg: #faf7f2; --surface: #ffffff; --text: #1f1a17; --text-muted: #5c524b; --line: #d9cfc4;
+  --accent: #2f7d32; --accent-text: #ffffff;
+  --ok: #1b6e3a; --warn: #8a5a00; --danger: #a3221b; --focus: #1d4ed8;
+  --radius: 12px; --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px; --space-6: 32px;
+  --tap: 44px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Game-only colours */
+  --soil: #efe4d3; --soil-edge: #8a7a66; --seed: #8a5a2b; --leaf: #2f7d32; --glow: #ffb300;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: #e6e0d6; color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.5; padding: 16px; }
+h1.page { font-size: 1.3rem; margin: 0 0 4px; }
+p.lead { margin: 0 0 16px; color: var(--text-muted); max-width: 70ch; }
+.frames { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+figure { margin: 0; }
+figcaption { font-weight: 700; margin-bottom: 6px; max-width: 360px; }
+figcaption small { display: block; font-weight: 400; color: var(--text-muted); }
+.phone { width: 360px; min-height: 640px; background: var(--bg); border: 2px solid #1f1a17; border-radius: 22px; overflow: hidden; position: relative; }
+h1, h2 { line-height: 1.2; margin: 0 0 var(--space-2); }
+p { margin: 0 0 var(--space-3); }
+[hidden] { display: none !important; }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* Buttons (from base.css) */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--tap); min-width: var(--tap); padding: 0 16px;
+  border: 2px solid var(--accent); border-radius: var(--radius); background: var(--surface); color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; }
+.btn-primary { background: var(--accent); color: var(--accent-text); }
+.btn-quiet { border-color: var(--line); color: var(--text); }
+.btn-block { display: flex; width: 100%; }
+.big { min-height: 64px; font-size: 1.15rem; }
+.row { display: flex; gap: 8px; justify-content: center; }
+.row .btn { flex: 1 1 auto; }
+
+/* Title */
+.title-screen { display: flex; flex-direction: column; align-items: center; padding: 32px 16px 24px; text-align: center; }
+.title-screen h1 { font-size: 2rem; margin: 8px 0 4px; }
+.tagline { color: var(--text-muted); margin-bottom: 8px; }
+.goal-sentence { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; }
+.title-actions { display: grid; gap: 8px; width: 100%; }
+.fine-print { margin-top: 20px; color: var(--text-muted); font-size: 0.95rem; }
+
+/* Level picker */
+.picker { padding: 20px 12px; }
+.levels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.level { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; min-height: 132px; padding: 12px 8px;
+  border: 3px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+.level[aria-pressed="true"] { border-color: var(--accent); background: #e8f3e8; }
+.level small { font-weight: 400; color: var(--text-muted); }
+.level .mini { display: flex; gap: 3px; align-items: center; height: 40px; font-size: 1.4rem; font-weight: 800; }
+.dot { width: 14px; height: 14px; border-radius: 50%; background: var(--seed); display: inline-block; }
+.dot.leaf { background: var(--leaf); border-radius: 2px 50% 2px 50%; }
+
+/* Play */
+.play-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; }
+.play-title { margin: 0; font-size: 1.15rem; }
+.goal-line { margin: 0; padding: 0 12px; color: var(--text); text-align: center; font-weight: 600; font-size: 1.1rem; }
+.garden { display: flex; justify-content: center; gap: 8px; padding: 8px 12px 4px; }
+.slot { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; border: 2px dashed var(--soil-edge); background: var(--surface); }
+.slot.done { border: 2px solid var(--accent); background: #e8f3e8; }
+.slot.now { border: 3px solid var(--accent); }
+.status { text-align: center; min-height: 40px; padding: 4px 12px; font-size: 1.5rem; font-weight: 800; }
+.status .part-a { color: var(--seed); }
+.status .part-b { color: var(--leaf); }
+
+/* Frame and cells */
+.frame { display: grid; grid-template-columns: repeat(5, 64px); gap: 4px; justify-content: center; padding: 4px; background: #d6c3a3; border-radius: 16px; margin: 0 auto; width: fit-content; }
+.frame .cell { width: 64px; height: 64px; border-radius: 14px; border: 2px dashed var(--soil-edge); background: var(--soil); display: grid; place-items: center; padding: 0; cursor: pointer; }
+.frame .cell svg { width: 52px; height: 52px; }
+.frame .cell:disabled { cursor: default; }
+.frame .cell.glow { border: 3px solid var(--glow); animation: pulse 1.2s ease-in-out infinite; }
+.frame .cell.filled { border-style: solid; border-color: #b9a483; }
+@keyframes pulse { 50% { transform: scale(1.06); } }
+.frame.small { grid-template-columns: repeat(5, 52px); padding: 4px; margin: 0 auto 6px; }
+.frame.small .cell { width: 52px; height: 52px; border-radius: 12px; }
+.frame.small .cell svg { width: 42px; height: 42px; }
+.two { display: grid; justify-content: center; }
+.pair-panel { margin: 12px; padding: 12px; background: #e8f3e8; border: 2px solid var(--accent); border-radius: var(--radius); text-align: center; display: flex; align-items: center; gap: 12px; justify-content: center; }
+.pair-panel .eq { font-size: 2rem; font-weight: 800; }
+.tray { display: flex; gap: 6px; justify-content: center; align-items: center; min-height: 40px; }
+.tray .dot { width: 22px; height: 22px; }
+.controls { display: flex; gap: 8px; padding: 12px; justify-content: center; }
+.controls .btn { flex: 1 1 0; }
+.pip-bubble { display: flex; gap: 8px; align-items: flex-start; padding: 8px 12px; }
+.bubble { background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: 6px 12px; font-size: 1rem; }
+.bubble.silent { display: none; }
+
+/* Result */
+.result { padding: 20px 16px; text-align: center; }
+.result .slots { display: flex; justify-content: center; gap: 8px; margin: 8px 0 12px; }
+.result ul { list-style: none; padding: 0; margin: 0 0 12px; text-align: left; }
+.result li { padding: 6px 0; border-bottom: 1px solid var(--line); }
+.badge { display: inline-block; padding: 4px 12px; border-radius: 999px; background: #fff3cd; border: 2px solid #8a5a00; font-weight: 700; color: #5b3b00; }
+.note { font-size: 0.95rem; color: var(--text-muted); max-width: 360px; margin: 6px 0 0; }
+</style>
+</head>
+<body>
+<h1 class="page">Ten Frame Garden: mockup (Step 3)</h1>
+<p class="lead">360px wide, using the shared hub tokens (accent #2f7d32 only). The first Play screen is live: tap the glowing cells to plant seeds and check the 64px tap size on your phone. Round brown seed = given, leaf = yours (shape and colour, never colour alone).</p>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="seed" viewBox="0 0 48 48"><ellipse cx="24" cy="25" rx="15" ry="13" fill="#8a5a2b"/><ellipse cx="19" cy="20" rx="5" ry="3" fill="#c79a66" opacity=".8"/></symbol>
+    <symbol id="leaf" viewBox="0 0 48 48"><path d="M8 40C8 18 22 8 42 8c0 22-12 32-34 32z" fill="#2f7d32" stroke="#1b4d1f" stroke-width="2"/><path d="M12 36L34 14" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/></symbol>
+    <symbol id="flower" viewBox="0 0 48 48"><g fill="#d9467a"><circle cx="24" cy="12" r="7"/><circle cx="36" cy="24" r="7"/><circle cx="24" cy="36" r="7"/><circle cx="12" cy="24" r="7"/></g><circle cx="24" cy="24" r="7" fill="#ffb300"/></symbol>
+    <symbol id="bud" viewBox="0 0 48 48"><path d="M24 40V24" stroke="#2f7d32" stroke-width="4" stroke-linecap="round"/><ellipse cx="24" cy="18" rx="7" ry="9" fill="#8bc48e" stroke="#2f7d32" stroke-width="2"/></symbol>
+    <symbol id="pip" viewBox="0 0 64 64">
+      <path d="M32 58V34" stroke="#2f7d32" stroke-width="5" stroke-linecap="round"/>
+      <path d="M32 40C20 40 12 32 12 22c12 0 20 6 20 18z" fill="#4caf50" stroke="#1b4d1f" stroke-width="2.5"/>
+      <path d="M32 40c12 0 20-8 20-18-12 0-20 6-20 18z" fill="#4caf50" stroke="#1b4d1f" stroke-width="2.5"/>
+      <circle cx="32" cy="30" r="14" fill="#8bd48e" stroke="#1b4d1f" stroke-width="2.5"/>
+      <circle cx="27" cy="28" r="2.6" fill="#1f1a17"/><circle cx="37" cy="28" r="2.6" fill="#1f1a17"/>
+      <path d="M26 34q6 5 12 0" stroke="#1f1a17" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div class="frames">
+
+<!-- 1. Title -->
+<figure>
+  <figcaption>1. Title<small>Pip, name, one-sentence goal, Play, How to play, sound. First Play starts the tutorial.</small></figcaption>
+  <div class="phone">
+    <div class="title-screen">
+      <svg width="112" height="112" role="img" aria-label="Pip the sprout"><use href="#pip"/></svg>
+      <h1>Ten Frame Garden</h1>
+      <p class="tagline">Plant seeds, grow flowers</p>
+      <p class="goal-sentence">Fill the frame so both parts make 10.</p>
+      <div class="title-actions">
+        <button class="btn btn-primary btn-block big">Play</button>
+        <button class="btn btn-block big">How to play</button>
+        <div class="row"><button class="btn btn-quiet">Sound: on</button><button class="btn btn-quiet">Settings</button><button class="btn btn-quiet">Home</button></div>
+      </div>
+      <p class="fine-print">Works offline. Nothing is collected.</p>
+    </div>
+  </div>
+</figure>
+
+<!-- 2. Level picker -->
+<figure>
+  <figcaption>2. Level picker<small>Four big icon buttons, no reading needed on level 1, all open (no locks). Remembers the last level.</small></figcaption>
+  <div class="phone">
+    <div class="picker">
+      <h2>Pick a garden</h2>
+      <div class="levels">
+        <button class="level" aria-pressed="false" aria-label="Dots. Count the dots. Ages 4 to 6."><span class="mini"><i class="dot"></i><i class="dot"></i><i class="dot"></i></span>Dots<small>4-6</small></button>
+        <button class="level" aria-pressed="true" aria-label="Fill to 10. Ages 5 to 8."><span class="mini">6 + ?</span>Fill to 10<small>5-8</small></button>
+        <button class="level" aria-pressed="false" aria-label="Two parts. Ages 6 to 8."><span class="mini"><i class="dot"></i><i class="dot"></i><i class="dot leaf"></i><i class="dot leaf"></i><i class="dot leaf"></i></span>Two parts<small>6-8</small></button>
+        <button class="level" aria-pressed="false" aria-label="Bonds to 20. Ages 7 to 8."><span class="mini">20</span>Bonds to 20<small>7-8</small></button>
+      </div>
+      <button class="btn btn-primary btn-block big" style="margin-top:16px">Start</button>
+      <button class="btn btn-quiet btn-block" style="margin-top:8px">Back</button>
+    </div>
+  </div>
+</figure>
+
+<!-- 3. Play, Fill to 10 (live) -->
+<figure>
+  <figcaption>3. Play: Fill to 10 (tap me)<small>Garden of 5 flowers, counter "6 + 1", Pip bubble, Undo, Hint, ?. Glowing cell = where the tutorial points.</small></figcaption>
+  <div class="phone" id="live">
+    <div class="play-header"><h2 class="play-title">Ten Frame Garden</h2><div><button class="btn btn-quiet" aria-label="Rules">?</button> <button class="btn btn-quiet">Menu</button></div></div>
+    <div class="garden" aria-label="Garden: 1 of 5 flowers done">
+      <span class="slot done"><svg width="30" height="30"><use href="#flower"/></svg></span>
+      <span class="slot now"><svg width="30" height="30"><use href="#bud"/></svg></span>
+      <span class="slot"></span><span class="slot"></span><span class="slot"></span>
+    </div>
+    <p class="goal-line" id="goal">Fill the frame to 10</p>
+    <div class="status" id="status" aria-live="polite"><span class="part-a">6</span> + <span class="part-b">0</span></div>
+    <div class="frame" id="frame" role="group" aria-label="Ten frame, 2 rows of 5"></div>
+    <div id="pairbox" hidden class="pair-panel"><span class="eq"><span class="part-a">6</span> + <span class="part-b">4</span> = 10</span><svg width="44" height="44"><use href="#flower"/></svg></div>
+    <div class="pip-bubble"><svg width="44" height="44"><use href="#pip"/></svg><p class="bubble" id="bubble">Tap an empty cell to plant a seed!</p></div>
+    <div class="controls">
+      <button class="btn btn-quiet big" id="undo">Undo</button>
+      <button class="btn btn-quiet big" id="hint">Hint</button>
+      <button class="btn btn-primary big" id="next" hidden>Next</button>
+    </div>
+  </div>
+</figure>
+
+<!-- 4. Play, Dots level -->
+<figure>
+  <figcaption>4. Play: Dots level (ages 4-6)<small>No numerals anywhere. Silent Pip. The Hint shows a tray of dots, not a number.</small></figcaption>
+  <div class="phone">
+    <div class="play-header"><h2 class="play-title">Ten Frame Garden</h2><div><button class="btn btn-quiet" aria-label="Rules">?</button> <button class="btn btn-quiet">Menu</button></div></div>
+    <div class="garden" aria-label="Garden: 2 of 5 flowers done">
+      <span class="slot done"><svg width="30" height="30"><use href="#flower"/></svg></span>
+      <span class="slot done"><svg width="30" height="30"><use href="#flower"/></svg></span>
+      <span class="slot now"><svg width="30" height="30"><use href="#bud"/></svg></span>
+      <span class="slot"></span><span class="slot"></span>
+    </div>
+    <div class="tray" aria-label="Hint: 4 more seeds needed"><i class="dot leaf"></i><i class="dot leaf"></i><i class="dot leaf"></i><i class="dot leaf"></i></div>
+    <div class="frame" id="frame-dots" role="group" aria-label="Ten frame, 2 rows of 5"></div>
+    <div class="pip-bubble"><svg width="56" height="56"><use href="#pip"/></svg></div>
+    <div class="controls"><button class="btn btn-quiet big">Undo</button><button class="btn btn-quiet big">Hint</button></div>
+  </div>
+</figure>
+
+<!-- 5. Play, Bonds to 20 -->
+<figure>
+  <figcaption>5. Play: Bonds to 20 (ages 7-8)<small>Two frames, 52px cells (still above 44px) so both fit. Frame 1 is full; frame 2 has 4 given seeds.</small></figcaption>
+  <div class="phone">
+    <div class="play-header"><h2 class="play-title">Ten Frame Garden</h2><div><button class="btn btn-quiet" aria-label="Rules">?</button> <button class="btn btn-quiet">Menu</button></div></div>
+    <div class="garden" aria-label="Garden: 3 of 5 flowers done">
+      <span class="slot done"><svg width="30" height="30"><use href="#flower"/></svg></span><span class="slot done"><svg width="30" height="30"><use href="#flower"/></svg></span><span class="slot done"><svg width="30" height="30"><use href="#flower"/></svg></span>
+      <span class="slot now"><svg width="30" height="30"><use href="#bud"/></svg></span><span class="slot"></span>
+    </div>
+    <p class="goal-line">Fill both frames to 20</p>
+    <div class="status"><span class="part-a">14</span> + <span class="part-b">2</span></div>
+    <div class="two">
+      <div class="frame small" id="f20a" role="group" aria-label="Frame 1 of 2"></div>
+      <div class="frame small" id="f20b" role="group" aria-label="Frame 2 of 2"></div>
+    </div>
+    <div class="controls"><button class="btn btn-quiet big">Undo</button><button class="btn btn-quiet big">Hint</button></div>
+  </div>
+</figure>
+
+<!-- 6. Result -->
+<figure>
+  <figcaption>6. Garden result: says why<small>No score and no losing. Facts from the data: new bonds, no-hint frames, bonds known so far.</small></figcaption>
+  <div class="phone">
+    <div class="result">
+      <svg width="88" height="88"><use href="#pip"/></svg>
+      <h2>Your garden has 5 flowers!</h2>
+      <div class="slots" aria-label="5 of 5 flowers"><svg width="40" height="40"><use href="#flower"/></svg><svg width="40" height="40"><use href="#flower"/></svg><svg width="40" height="40"><use href="#flower"/></svg><svg width="40" height="40"><use href="#flower"/></svg><svg width="40" height="40"><use href="#flower"/></svg></div>
+      <ul>
+        <li>New pairs today: 7 + 3, 4 + 6</li>
+        <li>Frames with no hint: 4 of 5</li>
+        <li>Pairs you know now: 6 of 9</li>
+      </ul>
+      <p><span class="badge">New badge: Full garden</span></p>
+      <div class="title-actions">
+        <button class="btn btn-primary btn-block big">Play again</button>
+        <div class="row"><button class="btn btn-quiet">Change level</button><button class="btn btn-quiet">How to play</button><button class="btn btn-quiet">Home</button></div>
+      </div>
+    </div>
+  </div>
+</figure>
+
+</div>
+
+<script>
+// Mockup only: builds cells from a pattern string. g = given seed, l = child's leaf seed, . = empty, * = glowing empty
+function build(el, pattern, interactive) {
+  el.innerHTML = '';
+  [...pattern].forEach((ch, i) => {
+    const b = document.createElement('button');
+    b.className = 'cell';
+    b.type = 'button';
+    if (ch === 'g' || ch === 'l') {
+      b.disabled = !interactive || ch === 'g';
+      b.classList.add('filled');
+      b.setAttribute('aria-label', 'Cell ' + (i + 1) + ', ' + (ch === 'g' ? 'seed from the question' : 'your seed'));
+      b.innerHTML = '<svg><use href="#' + (ch === 'g' ? 'seed' : 'leaf') + '"/></svg>';
+    } else {
+      b.setAttribute('aria-label', 'Cell ' + (i + 1) + ', empty. Tap to plant a seed.');
+      if (ch === '*') b.classList.add('glow');
+    }
+    el.appendChild(b);
+  });
+}
+build(document.getElementById('frame-dots'), 'gggggg*...', false);
+build(document.getElementById('f20a'), 'gggggggggg', false);
+build(document.getElementById('f20b'), 'ggggll....', false);
+
+// Live frame: Fill to 10 with 6 given seeds
+const frame = document.getElementById('frame');
+let cells = [...'gggggg....'];
+function refresh() {
+  const planted = cells.filter(c => c === 'l').length;
+  const left = cells.filter(c => c === '.').length;
+  build(frame, cells.map((c, i) => (c === '.' && i === cells.indexOf('.') ? '*' : c)).join(''), true);
+  document.getElementById('status').innerHTML = '<span class="part-a">6</span> + <span class="part-b">' + planted + '</span>';
+  const done = left === 0;
+  document.getElementById('pairbox').hidden = !done;
+  document.getElementById('next').hidden = !done;
+  document.getElementById('hint').hidden = done;
+  document.getElementById('undo').hidden = done;
+  document.getElementById('bubble').textContent = done ? 'A flower grew! 6 and 4 make 10.' : (left + (left === 1 ? ' more to go!' : ' more to go!'));
+  document.getElementById('goal').textContent = done ? 'Frame full!' : 'Fill the frame to 10';
+}
+frame.addEventListener('click', e => {
+  const b = e.target.closest('button.cell');
+  if (!b || b.disabled) return;
+  const i = [...frame.children].indexOf(b);
+  if (cells[i] === '.') { cells[i] = 'l'; refresh(); }
+});
+document.getElementById('undo').addEventListener('click', () => {
+  const j = cells.lastIndexOf('l'); if (j >= 0) { cells[j] = '.'; refresh(); }
+});
+document.getElementById('hint').addEventListener('click', () => {
+  document.getElementById('bubble').textContent = (cells.filter(c => c === '.').length) + ' more seeds make 10.';
+});
+document.getElementById('next').addEventListener('click', () => { cells = [...'gggggg....']; refresh(); });
+refresh();
+</script>
+</body>
+</html>

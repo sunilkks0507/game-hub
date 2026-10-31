@@ -65,7 +65,7 @@ Title (Pip, name, goal, Play, How to play, sound, Settings, Home) -> first Play 
 Play screen: goal line (levels 2-4) or dot tray (level 1), garden progress (5 flower slots), the frame(s), counter line, Undo, Hint, "?" and Menu. When a frame completes: the flower grows over the frame (a fade with reduce motion), the pair appears, and a big **Next** button appears. No auto-advance; the child sets the pace.
 
 ## 11. Layout and interaction (360px first)
-- Page side padding 12px. Levels 1-3: cells are 64px with 4px gaps, so a frame is 336px wide. Level 4 stacks two frames with 52px cells (still 44px or more) so both fit in view.
+- Levels 1-3: cells are 64px with 4px gaps, so a frame is 336px wide; with a 4px soil border it is 344px, centred in 360px (8px each side). Other content keeps 12px side padding. Level 4 stacks two frames with 52px cells (still 44px or more) so both fit in view.
 - Every cell is a `<button>`. Labels: "Cell 7 of 10, empty. Tap to plant a seed.", "Cell 3 of 10, seed from the question.", "Cell 7 of 10, your seed." Given and auto seeds are disabled.
 - Keyboard: Tab to the grid; arrow keys move between cells; Enter or Space plants; Backspace or the Undo button removes the last seed.
 - Seeds differ by **shape and colour**: given/auto = round seed (brown), child's = leaf-shaped seed (green). Never colour alone.
