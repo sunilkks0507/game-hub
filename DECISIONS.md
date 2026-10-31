@@ -163,3 +163,8 @@ Known gaps against GAME_ONBOARDING_STANDARD, not fixed in this step: no "?" rule
 
 ## 2026-10-31 Verified (Huli Meke in the hub)
 Live at https://sunilkks0507.github.io/game-hub/games/huli-meke/index.html. 200 tests pass and gate the deploy (33 are Huli Meke's own). Local Chromium at 360px: home, tutorial, starting a game, old stats carried over, no horizontal scroll. Live (Chrome): service worker active, 19 Huli Meke files precached, hub list shows 5 games. NOT tested: a full game played to the end, a real phone, offline reload on the live URL, a real player.
+
+## 2026-10-31 Pebble Pals joins the hub
+Pebble Pals is copied into `src/games/pebble-pals/` as a standalone page (Option A). It keeps its plain global scripts: each page is isolated, so they cannot collide with other games, and converting 2,000 lines to ES modules was not needed. Removed: its own sw.js and manifest, the Google Fonts links (the hub allows no outside requests; the CSS already falls back to system fonts, so the look changes slightly). Storage moved to `hub:pebble-pals:save:v1` and `:muted:v1`, reading the old keys once; each save also writes `hub:pebble-pals:progress:v1`. Added a Home button (house icon) and 7 engine tests (the first tests this game has), loaded in a Node sandbox.
+Category (default, confirm): Explorers, also Family, ages 6 to 12. One bot level, so `difficulty` is `["single"]`. Rule set is stated in `ruleVariant`.
+Known gaps against GAME_ONBOARDING_STANDARD, not fixed in this step: no grown-up corner (required for Explorers), no 3 to 5 step tutorial on first play (it has 4 lessons in a Learn tab instead), no "?" card on the play screen (it has a rule book button), no reduced-motion setting, `user-scalable=no` in the viewport tag.

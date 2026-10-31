@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <defs>
+    <linearGradient id="favPebble" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+  </defs>
+  <circle cx="32" cy="34" r="26" fill="url(#favPebble)" stroke="#0369A1" stroke-width="3"/>
+  <circle cx="23" cy="28" r="4.5" fill="#0F172A"/>
+  <circle cx="21.5" cy="26.5" r="1.8" fill="#FFFFFF"/>
+  <circle cx="41" cy="28" r="4.5" fill="#0F172A"/>
+  <circle cx="39.5" cy="26.5" r="1.8" fill="#FFFFFF"/>
+  <path d="M 26 38 Q 32 44 38 38" stroke="#0F172A" stroke-width="2.5" stroke-linecap="round" fill="none"/>
+  <path d="M 32 8 C 26 2 28 -2 36 0 C 37 5 35 7 32 8 Z" fill="#4ADE80" stroke="#15803D" stroke-width="1.5"/>
+</svg>

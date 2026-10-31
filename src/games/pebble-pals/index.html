@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Pebble Pals: Territory Quest!</title>
+  
+  <!-- PWA Meta -->
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <meta name="theme-color" content="#0284C7">
+  <meta name="description" content="Tactile, kid-friendly territory board game inspired by Go. Hold hands, paint territory, and explore with Pebble Pals!">
+  <link rel="icon" type="image/svg+xml" href="icons/favicon.svg">
+  <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png">
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Top App Header -->
+  <header class="app-header">
+    <div class="brand-container">
+      <img src="icons/icon.svg" alt="Pebble Pals Logo" class="brand-logo">
+      <div class="brand-text">
+        <h1>Pebble Pals! <span>⭐</span></h1>
+        <p>Territory Quest for Kids</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <a class="icon-btn" id="link-hub-home" href="../../" title="All games" aria-label="All games" style="text-decoration:none;display:inline-flex;align-items:center;justify-content:center;">🏠</a>
+      <button class="icon-btn" id="btn-rules-toggle" title="Open Rule Book">
+        📖
+      </button>
+      <button class="icon-btn" id="btn-sound-toggle" title="Toggle Sound">
+        🔊
+      </button>
+    </div>
+  </header>
+
+  <!-- Navigation Tabs -->
+  <nav class="main-nav">
+    <button class="nav-tab active" data-screen="arena">
+      <span>⚔️</span>
+      <span>Play Arena</span>
+    </button>
+    <button class="nav-tab" data-screen="learn">
+      <span>🎓</span>
+      <span>Learn with Bao</span>
+    </button>
+    <button class="nav-tab" data-screen="trophies">
+      <span>🏆</span>
+      <span>Trophy Room</span>
+    </button>
+  </nav>
+
+  <!-- Main Views Container -->
+  <main style="flex:1; display:flex; flex-direction:column;">
+
+    <!-- SCREEN 1: PLAY ARENA -->
+    <section class="screen-view active" id="screen-arena">
+      <!-- Arena Setup Panel (shown before match) -->
+      <div id="arena-setup-panel" style="width:100%;">
+        <!-- Rendered by app.js -->
+      </div>
+
+      <!-- Arena Active Gameplay Panel (shown during match) -->
+      <div id="arena-game-panel" class="gameplay-container" style="display:none;">
+        <!-- Top Dynamic Tug-of-War Score Bar -->
+        <div class="score-bar-card" id="hud-score-card">
+          <div class="score-bar-title">
+            <span>🗺️ LIVE SCORE METER</span>
+            <span style="color:#0284C7; font-weight:900;">Spaces (1 Pt) • Captures (2 Pts)</span>
+          </div>
+
+          <div class="tug-of-war-meter" id="hud-tug-of-war-meter">
+            <!-- Dynamic segments injected by JS -->
+          </div>
+
+          <div class="player-score-chips" id="hud-score-chips">
+            <!-- Score chips with avatars and popped counters injected by JS -->
+          </div>
+        </div>
+
+        <!-- Turn Banner -->
+        <div class="turn-banner active-turn" id="hud-turn-banner">
+          <div class="turn-player-info">
+            <div class="turn-avatar" id="hud-turn-avatar">
+              <!-- Avatar SVG -->
+            </div>
+            <div>
+              <div class="turn-text-headline" id="hud-turn-headline">Player 1's Turn</div>
+              <div class="turn-text-sub" id="hud-turn-sub">Tap an open garden box to place your Pebble Pal!</div>
+            </div>
+          </div>
+
+          <div style="display:flex; gap:6px;">
+            <button class="action-btn" id="btn-toggle-grid-style" title="Switch between Garden Boxes and Classic Lines">
+              🌿 Garden Boxes
+            </button>
+          </div>
+        </div>
+
+        <!-- In-Game Controls Bar -->
+        <div class="controls-bar">
+          <button class="action-btn active" id="btn-toggle-breaths" title="Toggle Breathing Hearts">
+            <span>💚 Show Breaths</span>
+          </button>
+          <button class="action-btn" id="btn-undo-move" title="Undo Last Move">
+            <span>⏪ Undo</span>
+          </button>
+          <button class="action-btn" id="btn-pass-turn" title="Pass Turn / Done Building">
+            <span>🍃 Pass / Done</span>
+          </button>
+          <button class="action-btn danger" id="btn-quit-game" title="Quit to Setup">
+            <span>🚪 Exit</span>
+          </button>
+        </div>
+
+        <!-- Board Wrapper -->
+        <div class="board-wrapper">
+          <div class="board-container garden-boxes" id="game-board-container">
+            <!-- Rendered by app.js -->
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SCREEN 2: LEARN WITH BAO (TUTORIALS) -->
+    <section class="screen-view" id="screen-learn">
+      <!-- Injected by tutorial.js and app.js -->
+    </section>
+
+    <!-- SCREEN 3: TROPHY ROOM -->
+    <section class="screen-view" id="screen-trophies">
+      <!-- Injected by trophies.js and app.js -->
+    </section>
+
+  </main>
+
+  <!-- Interactive Rule Book Modal -->
+  <div class="modal-overlay" id="rules-modal">
+    <div class="modal-card rules-modal-card">
+      <button class="rules-close-btn" id="btn-close-rules" title="Close Rule Book">✖</button>
+      
+      <div class="rules-book-header">
+        <div class="rules-book-badge">📖 Official Handbook</div>
+        <h2>Pebble Pals Rule Book</h2>
+        <p>Master Bao's Illustrated Garden Rules</p>
+      </div>
+
+      <!-- Chapter Navigation Tabs -->
+      <div class="rules-chapter-tabs" id="rules-chapter-tabs"></div>
+
+      <!-- Page Viewport -->
+      <div class="rules-page-viewport" id="rules-page-viewport"></div>
+
+      <!-- Bottom Controls & Pagination -->
+      <div class="rules-footer">
+        <button class="action-btn" id="btn-rules-prev">⬅️ Prev</button>
+        <div class="rules-page-dots" id="rules-page-dots"></div>
+        <button class="btn-primary-large" id="btn-rules-next" style="margin:0; padding:8px 18px; font-size:0.95rem;">Next ➡️</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Victory Celebration Modal -->
+  <div class="modal-overlay" id="victory-modal">
+    <div class="modal-card">
+      <canvas class="confetti-canvas" id="confetti-canvas"></canvas>
+      <h3 style="font-size:1.1rem; color:#64748B; font-weight:800;" id="victory-modal-title">🎉 Quest Complete!</h3>
+      <div id="victory-winner-banner"></div>
+      <div id="victory-score-breakdown" style="width:100%; margin:8px 0;"></div>
+      
+      <div style="display:flex; gap:12px; width:100%; justify-content:center; z-index:10;">
+        <button class="btn-primary-large" id="btn-modal-restart" style="padding:12px 20px; font-size:1.05rem; margin:0;">
+          Play Again 🔄
+        </button>
+        <button class="action-btn" id="btn-modal-setup" style="padding:12px 20px; font-size:1.05rem;">
+          Arena Setup ⚙️
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Friendly Toast Tooltip (Suicide / Guard Warning) -->
+  <div class="friendly-toast" id="friendly-toast"></div>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ai.js"></script>
+  <script src="js/tutorial.js"></script>
+  <script src="js/trophies.js"></script>
+  <script src="js/app.js"></script>
+  <!-- Offline support: the hub's one service worker caches this game. -->
+  <script type="module">import { registerServiceWorker } from '../../shared/pwa.js'; registerServiceWorker();</script>
+</body>
+</html>
