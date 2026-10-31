@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Mani, a friendly bead on a string">
+  <title>Mani, a friendly bead on a string</title>
+  <rect width="512" height="512" rx="112" fill="#6b3fa0"/>
+  <path d="M0 330 Q256 270 512 330" fill="none" stroke="#e9dcf7" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="92" cy="318" r="34" fill="#1f1a17" stroke="#e9dcf7" stroke-width="10"/>
+  <circle cx="420" cy="318" r="34" fill="#fffdf8" stroke="#1f1a17" stroke-width="10"/>
+  <circle cx="420" cy="318" r="14" fill="none" stroke="#1f1a17" stroke-width="8"/>
+  <ellipse cx="256" cy="452" rx="110" ry="16" fill="#3f2262" opacity="0.55"/>
+  <circle cx="256" cy="292" r="150" fill="#fff7ea" stroke="#2c1648" stroke-width="14"/>
+  <circle cx="210" cy="268" r="22" fill="#2c1648"/>
+  <circle cx="302" cy="268" r="22" fill="#2c1648"/>
+  <circle cx="218" cy="260" r="7" fill="#ffffff"/>
+  <circle cx="310" cy="260" r="7" fill="#ffffff"/>
+  <circle cx="160" cy="324" r="20" fill="#f29c7e" opacity="0.75"/>
+  <circle cx="352" cy="324" r="20" fill="#f29c7e" opacity="0.75"/>
+  <path d="M216 328 Q256 376 296 328" fill="none" stroke="#2c1648" stroke-width="13" stroke-linecap="round"/>
+  <rect x="236" y="96" width="40" height="30" rx="10" fill="#e9dcf7" stroke="#2c1648" stroke-width="10"/>
+</svg>
