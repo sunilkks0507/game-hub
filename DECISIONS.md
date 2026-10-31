@@ -155,3 +155,8 @@ Live at https://sunilkks0507.github.io/game-hub/games/pallanguzhi/index.html. 81
 
 ## 2026-10-31 Verified (Ten Frame Garden)
 Live at https://sunilkks0507.github.io/game-hub/games/ten-frame-garden/index.html. 165 tests pass and gate the deploy. In Chromium at 360px: all four levels played through to the result, no horizontal scroll, no digits on the Level 1 play and result screens, keyboard play (arrows, Enter, Backspace), Undo, Hint, continue after reload, grown-up gate, and no console errors. On the live site (Chrome): service worker active, 9 game files precached under the current build, a Bonds to 20 frame completes. NOT tested: a real phone, a real child (Step 7 stays unticked), a literal offline reload on the live URL (checked in the local run and by the cache contents only).
+
+## 2026-10-31 Huli Meke joins the hub
+Huli Meke (built earlier as its own site) is copied into `src/games/huli-meke/` as a standalone page (Option A). Its own sw.js, manifest, install button and social/canonical tags are removed; the hub's one service worker caches it. Storage moved to `hub:huli-meke:<name>:v1` and reads the old `hm_*` keys once, so existing players keep their stats; each finished game also writes the shared progress shape.
+Category (default, confirm): Challengers, also Adults and Family, ages 9 and up. Rule set is stated in `ruleVariant`.
+Known gaps against GAME_ONBOARDING_STANDARD, not fixed in this step: no "?" rules button on the play screen, no mascot or emblem on the title screen, no reduced-motion setting, `user-scalable=no` in the viewport tag, and "Home" inside the game goes to its own title (the new "All games" button returns to the hub).

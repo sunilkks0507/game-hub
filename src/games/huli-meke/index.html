@@ -1,0 +1,385 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <title>Huli Meke - Karnataka Tiger & Goat Board Game</title>
+  <meta name="description" content="Play Huli Meke (Aadu Huli), the traditional Karnataka tiger and goat board game. Free, offline-capable, with 11 boards and 3 AI difficulty levels.">
+  <meta name="theme-color" content="#8C3B1E">
+
+  <!-- Content Security Policy -->
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; worker-src 'self' blob:;">
+
+  <!-- PWA Manifest & Icons -->
+  <link rel="manifest" href="../../manifest.webmanifest">
+  <link rel="icon" href="icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="../../icons/apple-touch-icon.png">
+
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <div id="app" role="main">
+
+    <!-- GLOBAL ERROR / RETRY SCREEN -->
+    <section id="screen-error" class="screen" aria-label="Error Screen">
+      <header class="top-bar">
+        <span>Huli Meke</span>
+      </header>
+      <div class="screen-body" style="justify-content:center; align-items:center; text-align:center;">
+        <div class="card" style="width:100%; padding:24px; gap:12px;">
+          <div class="title" style="color:var(--danger)">Unable to load game</div>
+          <div class="muted">Could not load the board data. Please check your connection and tap retry.</div>
+          <button id="btn-app-retry" class="btn" type="button" style="margin-top:8px;">Retry</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. HOME SCREEN -->
+    <section id="screen-home" class="screen active" aria-label="Home Screen">
+      <header class="top-bar">
+        <span>Huli Meke</span>
+      </header>
+      <div class="screen-body">
+        <div class="hero">
+          <div class="kn">ಹುಲಿ ಮೇಕೆ</div>
+          <div class="big">Huli Meke</div>
+          <div class="muted">The tiger and goat game of Karnataka</div>
+        </div>
+        <div id="home-preview-box" class="boardbox" aria-label="Classic Board Preview"></div>
+        <div class="spacer"></div>
+        <button id="btn-home-play" class="btn" type="button">Play</button>
+        <button id="btn-home-tutorial" class="btn sec" type="button">How to play</button>
+        <div class="row">
+          <button id="btn-home-stats" class="btn sec" style="flex:1" type="button">Stats</button>
+          <button id="btn-home-settings" class="btn sec" style="flex:1" type="button">Settings</button>
+        </div>
+        <a id="link-hub-home" class="btn sec" href="../../" style="text-decoration:none;display:flex;align-items:center;justify-content:center;">All games</a>
+      </div>
+    </section>
+
+    <!-- 2. CHOOSE MODE SCREEN -->
+    <section id="screen-mode" class="screen" aria-label="Choose Mode Screen">
+      <header class="top-bar">
+        <span>Choose mode</span>
+        <button class="back-btn" data-back="screen-home" type="button">Back</button>
+      </header>
+      <div class="screen-body">
+        <div class="card sel" data-mode="standard" tabindex="0" role="button" aria-pressed="true">
+          <div class="title" style="font-size:20px">Standard</div>
+          <div class="muted">3 tigers vs 15 goats. Tigers win at 5 captures. Classic game, ~15 mins.</div>
+        </div>
+        <div class="card" data-mode="mini" tabindex="0" role="button" aria-pressed="false">
+          <div class="title" style="font-size:20px">Mini</div>
+          <div class="muted">1 tiger vs 5 lambs. Tiger wins at 2 captures. Quick game, ~3 mins.</div>
+        </div>
+        <div class="card" data-mode="custom" tabindex="0" role="button" aria-pressed="false">
+          <div class="title" style="font-size:20px">Custom</div>
+          <div class="muted">Pick your own piece counts and capture target.</div>
+        </div>
+        <div class="spacer"></div>
+        <button id="btn-mode-continue" class="btn" type="button">Continue</button>
+      </div>
+    </section>
+
+    <!-- 3. CHOOSE BOARD SCREEN -->
+    <section id="screen-board" class="screen" aria-label="Choose Board Screen">
+      <header class="top-bar">
+        <span>Choose board</span>
+        <button class="back-btn" data-back="screen-mode" type="button">Back</button>
+      </header>
+      <div class="screen-body" style="gap:8px">
+        <div class="row" role="tablist">
+          <button id="tab-board-full" class="pill on" type="button" role="tab" aria-selected="true">Full size</button>
+          <button id="tab-board-mini" class="pill" type="button" role="tab" aria-selected="false">Mini</button>
+        </div>
+        <div id="board-tab-note" class="muted">Standard mode: 3 tigers vs 15 goats (tigers win at 5 captures). Mini boards are too small for Standard, so they are greyed out.</div>
+        <div id="board-cards-grid" class="cards-grid" role="region" aria-label="Board Selection Grid"></div>
+        <div class="spacer"></div>
+        <button id="btn-board-continue" class="btn" type="button">Continue</button>
+      </div>
+    </section>
+
+    <!-- 4. CUSTOM PIECES SCREEN -->
+    <section id="screen-custom" class="screen" aria-label="Custom Pieces Screen">
+      <header class="top-bar">
+        <span>Custom pieces</span>
+        <button class="back-btn" data-back="screen-board" type="button">Back</button>
+      </header>
+      <div class="screen-body">
+        <div id="custom-board-info" class="muted">Board: Classic Triangle (23 points)</div>
+        <div class="row" style="flex-wrap:wrap">
+          <button class="pill preset-pill" data-preset="standard" type="button">Standard 3 / 15</button>
+          <button class="pill preset-pill" data-preset="pack" type="button">Pack 4 / 16</button>
+          <button class="pill preset-pill" data-preset="hunt" type="button">Hunt 2 / 20</button>
+          <button class="pill preset-pill" data-preset="siege" type="button">Siege 6 / 25</button>
+        </div>
+
+        <div class="step">
+          <span>Tigers</span>
+          <div class="ctl">
+            <button id="btn-custom-tigers-minus" class="b" type="button" aria-label="Decrease tigers">&minus;</button>
+            <b id="val-custom-tigers">3</b>
+            <button id="btn-custom-tigers-plus" class="b" type="button" aria-label="Increase tigers">+</button>
+          </div>
+        </div>
+
+        <div class="step">
+          <span>Goats</span>
+          <div class="ctl">
+            <button id="btn-custom-goats-minus" class="b" type="button" aria-label="Decrease goats">&minus;</button>
+            <b id="val-custom-goats">15</b>
+            <button id="btn-custom-goats-plus" class="b" type="button" aria-label="Increase goats">+</button>
+          </div>
+        </div>
+
+        <div class="step">
+          <span>Tigers win at captures</span>
+          <div class="ctl">
+            <button id="btn-custom-target-minus" class="b" type="button" aria-label="Decrease target">&minus;</button>
+            <b id="val-custom-target">5</b>
+            <button id="btn-custom-target-plus" class="b" type="button" aria-label="Increase target">+</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <div id="custom-capacity-note" class="muted">This board holds up to 20 pieces in total (tigers plus goats).</div>
+        </div>
+        <div class="spacer"></div>
+        <button id="btn-custom-continue" class="btn" type="button">Continue</button>
+      </div>
+    </section>
+
+    <!-- 5. OPPONENT SCREEN -->
+    <section id="screen-opponent" class="screen" aria-label="Opponent Screen">
+      <header class="top-bar">
+        <span>Opponent</span>
+        <button id="btn-opponent-back" class="back-btn" type="button">Back</button>
+      </header>
+      <div class="screen-body">
+        <div class="row">
+          <button id="pill-opp-ai" class="pill on" style="flex:1" type="button">vs Computer</button>
+          <button id="pill-opp-human" class="pill" style="flex:1" type="button">Two players</button>
+        </div>
+
+        <!-- AI Options -->
+        <div id="ai-options-panel" style="display:flex; flex-direction:column; gap:12px;">
+          <div class="muted">You play as</div>
+          <div class="row">
+            <button class="pill side-pill on" data-side="T" type="button">Tiger</button>
+            <button class="pill side-pill" data-side="G" type="button">Goat</button>
+            <button class="pill side-pill" data-side="random" type="button">Random</button>
+          </div>
+
+          <div class="muted">Difficulty</div>
+          <div class="row">
+            <button class="pill diff-pill" data-diff="easy" type="button">Easy</button>
+            <button class="pill diff-pill on" data-diff="medium" type="button">Medium</button>
+            <button class="pill diff-pill" data-diff="hard" type="button">Hard</button>
+          </div>
+        </div>
+
+        <!-- Two Players Panel -->
+        <div id="human-options-panel" class="card" style="display:none;">
+          <div class="muted">Pass the phone after each move. Goat player moves first.</div>
+        </div>
+
+        <!-- Timer Options -->
+        <div class="timer-section" style="display:flex; flex-direction:column; gap:8px;">
+          <div class="muted">Turn timer</div>
+          <div class="row" role="radiogroup" aria-label="Turn timer duration" style="flex-wrap:wrap">
+            <button class="pill timer-pill on" data-timer="0" type="button">Off</button>
+            <button class="pill timer-pill" data-timer="15" type="button">15s</button>
+            <button class="pill timer-pill" data-timer="30" type="button">30s</button>
+            <button class="pill timer-pill" data-timer="45" type="button">45s</button>
+            <button class="pill timer-pill" data-timer="60" type="button">60s</button>
+          </div>
+
+          <!-- On Timeout Action (visible when timer > 0) -->
+          <div id="timeout-action-panel" style="display:none; flex-direction:column; gap:8px;">
+            <div class="muted">If time runs out</div>
+            <div class="row" role="radiogroup" aria-label="Timeout action">
+              <button class="pill timeout-pill on" data-timeout="forfeit" type="button" style="flex:1">Forfeit</button>
+              <button class="pill timeout-pill" data-timeout="random" type="button" style="flex:1">Random move</button>
+            </div>
+            <div id="timeout-action-desc" class="muted" style="font-size:12px;">Forfeit: The player whose time runs out loses immediately.</div>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+        <button id="btn-opponent-start" class="btn" type="button">Start game</button>
+      </div>
+    </section>
+
+    <!-- 6. GAME SCREEN -->
+    <section id="screen-game" class="screen" aria-label="Game Screen">
+      <header class="top-bar">
+        <span id="game-mode-title">Standard</span>
+        <button id="btn-game-pause" class="action-btn" type="button">Pause</button>
+      </header>
+      <div class="screen-body" style="gap:8px">
+        <div class="hud">
+          <div class="card">
+            <b id="hud-phase">Placing</b>
+            <span class="muted">Phase</span>
+          </div>
+          <div class="card">
+            <b id="hud-unplaced">15</b>
+            <span id="hud-unplaced-label" class="muted">Goats to place</span>
+          </div>
+          <div class="card">
+            <b id="hud-captured">0 / 5</b>
+            <span class="muted">Captured</span>
+          </div>
+        </div>
+
+        <div class="turn-container">
+          <div id="game-turn-text" class="turn" aria-live="polite">Your turn: place a goat</div>
+          <div id="game-timer-badge" class="timer-badge" style="display:none;" aria-live="polite" aria-label="Turn Timer">
+            <span class="timer-icon">⏱</span> <span id="timer-count">30</span>s
+          </div>
+        </div>
+
+        <div id="game-board-container" class="boardbox" tabindex="0" role="application" aria-label="Interactive Game Board"></div>
+
+        <div class="row">
+          <button id="btn-game-undo" class="btn sec sm" style="flex:1" type="button">Undo</button>
+          <button id="btn-game-hint" class="btn sec sm" style="flex:1" type="button">Hint</button>
+        </div>
+
+        <div id="game-toast-note" class="note" aria-live="polite">Tap a green dashed ring to place or move.</div>
+      </div>
+    </section>
+
+    <!-- 7. RESULT SCREEN -->
+    <section id="screen-result" class="screen" aria-label="Result Screen">
+      <header class="top-bar">
+        <span>Result</span>
+      </header>
+      <div class="screen-body">
+        <div class="hero">
+          <div id="result-hero-title" class="big">Goats win!</div>
+          <div id="result-hero-sub" class="muted">All tigers are trapped</div>
+        </div>
+        <div class="card">
+          <table>
+            <tr>
+              <th id="result-captured-label">Goats captured</th>
+              <td id="result-val-captured">3</td>
+            </tr>
+            <tr>
+              <th>Moves played</th>
+              <td id="result-val-moves">41</td>
+            </tr>
+            <tr>
+              <th>Mode</th>
+              <td id="result-val-mode">Standard, Medium</td>
+            </tr>
+          </table>
+        </div>
+        <div class="spacer"></div>
+        <button id="btn-result-again" class="btn" type="button">Play again</button>
+        <button id="btn-result-home" class="btn sec" type="button">Home</button>
+      </div>
+    </section>
+
+    <!-- 8. HOW TO PLAY (TUTORIAL) -->
+    <section id="screen-tutorial" class="screen" aria-label="How To Play Screen">
+      <header class="top-bar">
+        <span>How to play</span>
+        <button class="action-btn" data-back="screen-home" type="button">Skip</button>
+      </header>
+      <div class="screen-body" style="gap:8px">
+        <div id="tutorial-step-indicator" class="muted">Step 1 of 5: Place goats & lambs</div>
+        <div id="tutorial-board-box" class="boardbox" aria-hidden="true"></div>
+        <div class="card">
+          <b id="tutorial-step-title">Place pieces one per turn</b>
+          <div id="tutorial-step-body" class="muted">Goats are placed one per turn on any empty point. Tigers start on marked points.</div>
+        </div>
+        <div class="spacer"></div>
+        <div class="row">
+          <button id="btn-tutorial-back" class="btn sec" style="flex:1" type="button">Back</button>
+          <button id="btn-tutorial-next" class="btn" style="flex:1" type="button">Next</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. STATS SCREEN -->
+    <section id="screen-stats" class="screen" aria-label="Stats Screen">
+      <header class="top-bar">
+        <span>Stats</span>
+        <button class="back-btn" data-back="screen-home" type="button">Back</button>
+      </header>
+      <div class="screen-body">
+        <div id="stats-table-card" class="card">
+          <table>
+            <thead>
+              <tr>
+                <th>Mode</th>
+                <th>Played</th>
+                <th>Won</th>
+              </tr>
+            </thead>
+            <tbody id="stats-table-body"></tbody>
+          </table>
+        </div>
+        <div id="stats-empty-state" class="card" style="display:none; text-align:center; padding:24px;">
+          <div style="font-size:32px; margin-bottom:8px;">🎲</div>
+          <div class="muted" style="margin-bottom:16px;">No games yet. Play a game against the computer to see your stats.</div>
+          <button id="btn-stats-play" class="btn" type="button">Play now</button>
+        </div>
+        <div class="note">Stats are saved only on this phone.</div>
+      </div>
+    </section>
+
+    <!-- 10. SETTINGS SCREEN -->
+    <section id="screen-settings" class="screen" aria-label="Settings Screen">
+      <header class="top-bar">
+        <span>Settings</span>
+        <button class="back-btn" data-back="screen-home" type="button">Back</button>
+      </header>
+      <div class="screen-body">
+        <div class="toggle">
+          <span>Sound effects</span>
+          <div id="toggle-sound" class="sw on" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+        <div class="toggle">
+          <span>In-game hints</span>
+          <div id="toggle-hints" class="sw on" role="switch" aria-checked="true" tabindex="0"></div>
+        </div>
+        <div class="toggle">
+          <a href="../../privacy.html" style="color:var(--text); text-decoration:none; display:flex; justify-content:space-between; width:100%; align-items:center;">
+            <span>Privacy Policy</span>
+            <span style="color:var(--text-muted); font-size:18px;">&rarr;</span>
+          </a>
+        </div>
+        <div class="spacer"></div>
+        <button id="btn-settings-reset" class="btn danger" type="button">Reset stats</button>
+        <div class="note">Resetting asks for confirmation first.</div>
+      </div>
+    </section>
+
+    <!-- MODAL: PAUSE SHEET -->
+    <div id="modal-pause" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Pause Menu">
+      <div class="sheet">
+        <div class="title">Paused</div>
+        <button id="btn-pause-resume" class="btn" type="button">Resume</button>
+        <button id="btn-pause-restart" class="btn sec" type="button">Restart</button>
+        <button id="btn-pause-quit" class="btn danger" type="button">Quit to Home</button>
+      </div>
+    </div>
+
+    <!-- MODAL: CONFIRMATION DIALOG -->
+    <div id="modal-confirm" class="modal-overlay" role="dialog" aria-modal="true" aria-label="Confirmation Dialog">
+      <div class="sheet">
+        <div id="confirm-title" class="title">Leave this game?</div>
+        <div id="confirm-message" class="muted">Progress will be lost.</div>
+        <button id="btn-confirm-action" class="btn danger" type="button">Leave</button>
+        <button id="btn-confirm-cancel" class="btn sec" type="button">Cancel</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
