@@ -98,7 +98,7 @@ First flower (first frame completed), Full garden (finish a garden of 5), Every 
 Behind the same addition question gate as Pallanguzhi (for example 12 + 27). Shows what the game practises (number bonds to 10 and 20, the "make ten" idea), that it works offline, that nothing is collected, and how to reset device stats. No external links.
 
 ## 17. Files (planned)
-`index.html`, `css/style.css`, `js/engine.js`, `js/board.js` (frame render and keyboard), `js/mascot.js` (Pip SVG), `js/tutorial.js`, `js/app.js`, `icon.svg`, `game.json`, `tests/engine.test.js`, `tests/tutorial.test.js`, `GAME_BRIEF.md`, `MASTER_SPEC.md`. Accent colour `#2f7d32` (garden green); given-seed brown `#8a5a2b`. Contrast to be checked at the Production step.
+`index.html` (Pip and the seed, leaf, flower and bud pictures are an inline SVG sprite), `css/style.css`, `js/engine.js`, `js/board.js` (frame render and keyboard), `js/view.js` (counter, tray and pair panel), `js/tutorial.js`, `js/app.js`, `icon.svg`, `game.json`, `tests/engine.test.js`, `tests/tutorial.test.js`, `GAME_BRIEF.md`, `MASTER_SPEC.md`. Accent colour `#2f7d32` (garden green); given-seed brown `#8a5a2b`. Contrast to be checked at the Production step.
 
 ## 18. Done means
 - [ ] Engine rules match section 6; tests pass (`node --test`)
