@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Gilu, a squirrel shopkeeper with a coin">
+  <title>Gilu, a squirrel shopkeeper with a coin</title>
+  <rect width="512" height="512" rx="112" fill="#b45309"/>
+  <path d="M370 420c90-26 116-166 38-218-38-26-76 12-50 50 26 26 12 78-38 90z" fill="#c9824a" stroke="#5a3210" stroke-width="14"/>
+  <circle cx="230" cy="290" r="150" fill="#e3a063" stroke="#5a3210" stroke-width="14"/>
+  <circle cx="140" cy="150" r="44" fill="#e3a063" stroke="#5a3210" stroke-width="14"/>
+  <circle cx="320" cy="150" r="44" fill="#e3a063" stroke="#5a3210" stroke-width="14"/>
+  <ellipse cx="230" cy="326" rx="86" ry="72" fill="#f9e6cc"/>
+  <circle cx="186" cy="262" r="20" fill="#1f1a17"/><circle cx="274" cy="262" r="20" fill="#1f1a17"/>
+  <circle cx="192" cy="255" r="7" fill="#fff"/><circle cx="280" cy="255" r="7" fill="#fff"/>
+  <ellipse cx="230" cy="300" rx="18" ry="13" fill="#5a3210"/>
+  <path d="M192 330q38 38 76 0" fill="none" stroke="#5a3210" stroke-width="14" stroke-linecap="round"/>
+  <circle cx="400" cy="110" r="64" fill="#f1d37a" stroke="#5a3210" stroke-width="14"/>
+  <circle cx="400" cy="110" r="38" fill="none" stroke="#8a6f4d" stroke-width="10"/>
+</svg>

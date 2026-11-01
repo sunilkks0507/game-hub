@@ -1,0 +1,35 @@
+{
+  "id": "coin-money-shop",
+  "name": "Coin and Money Shop",
+  "tagline": "Make it exact, give change",
+  "category": "explorers",
+  "alsoIn": [
+    "family"
+  ],
+  "ageMin": 6,
+  "ageMax": 10,
+  "skills": [
+    "money",
+    "addition",
+    "subtraction",
+    "number sense"
+  ],
+  "players": "1",
+  "minutesPerSession": 6,
+  "accent": "#b45309",
+  "icon": "icon.svg",
+  "entry": "index.html",
+  "version": "0.1.0",
+  "goal": "Pay the exact price with coins and notes, then give the right change.",
+  "howToWin": "Serve all 8 customers in a day. Paying exactly is best; there is no way to lose.",
+  "controls": "tap",
+  "difficulty": [
+    "Coins",
+    "Notes",
+    "Change"
+  ],
+  "ruleVariant": "Whole rupees only. The till holds up to 12 pieces. On the Coins and Notes levels paying too much is allowed and Gilu hands back change; on the Change level too much change is refused.",
+  "about": "Practise making an exact amount of money and giving change, one customer at a time.",
+  "tutorialSteps": 4,
+  "mascot": "gilu"
+}

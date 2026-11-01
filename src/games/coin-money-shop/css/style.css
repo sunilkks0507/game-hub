@@ -1,0 +1,128 @@
+/* Coin and Money Shop. Hub tokens come from ../../shared/tokens.css; this game sets its own accent and
+   draws all money in CSS (original patterns, never copied from real currency). */
+:root {
+  --accent: #b45309; --accent-text: #ffffff;
+  --till: #f3e8d6; --till-edge: #8a6f4d; --glow: #ffb300;
+}
+html, body { margin: 0; }
+body { min-height: 100vh; background: var(--bg); color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.5; }
+main { max-width: 480px; margin: 0 auto; }
+h1, h2, h3 { line-height: 1.2; margin: 0 0 var(--space-2); }
+p { margin: 0 0 var(--space-3); }
+[hidden] { display: none !important; }
+
+.screen { padding: var(--space-4) 12px; }
+.stack { display: grid; gap: var(--space-2); margin-bottom: var(--space-3); }
+.field { display: grid; gap: var(--space-2); font-weight: 600; }
+.field input { min-height: var(--tap); font: inherit; padding: 0 12px; border: 2px solid var(--line); border-radius: var(--radius); }
+.choice { display: flex; align-items: center; gap: 12px; min-height: var(--tap); font-weight: 600; }
+.choice input { width: 24px; height: 24px; accent-color: var(--accent); }
+.gate-msg { min-height: 1.5em; color: var(--danger); font-weight: 600; }
+.btn.big, .big { min-height: 56px; font-size: 1.1rem; }
+.row { display: flex; gap: 8px; justify-content: center; }
+.row .btn { flex: 1 1 auto; text-decoration: none; }
+a.btn { text-decoration: none; }
+.icon-btn { font-size: 1.3rem; }
+.center { text-align: center; }
+.dialog-actions { flex-wrap: wrap; }
+
+/* Title */
+.title-screen { display: flex; flex-direction: column; align-items: center; text-align: center; padding-top: 28px; }
+.title-screen h1 { font-size: 2rem; margin: 8px 0 4px; }
+.tagline { color: var(--text-muted); margin-bottom: 8px; }
+.goal-sentence { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; }
+.title-actions { display: grid; gap: 8px; width: 100%; }
+.fine-print { margin-top: 20px; color: var(--text-muted); font-size: 0.95rem; }
+
+/* Level picker */
+.levels { display: grid; gap: 10px; margin: 12px 0; }
+.level { display: flex; align-items: center; gap: 12px; min-height: 84px; padding: 10px 12px; text-align: left;
+  border: 3px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+.level[aria-pressed="true"] { border-color: var(--accent); background: #fdf1e3; }
+.level small { display: block; font-weight: 400; color: var(--text-muted); }
+.level .mini { display: flex; gap: 4px; align-items: center; min-width: 92px; justify-content: center; }
+.level .mini .piece { cursor: inherit; }
+.level .mini .coin { width: 40px; height: 40px; font-size: 1rem; border-width: 2px; }
+.level .mini .note { width: 52px; height: 38px; font-size: 1rem; border-width: 2px; }
+.levels-actions { display: grid; gap: 8px; margin-top: 12px; }
+
+/* Pieces: coins are round, notes are wide rectangles; always a big numeral */
+.piece { font: inherit; font-weight: 800; color: var(--text); cursor: pointer; position: relative; display: inline-grid; place-items: center; border: 3px solid var(--till-edge); padding: 0; }
+.coin { width: 64px; height: 64px; border-radius: 50%; font-size: 1.5rem; }
+.c1  { background: #dfe3e8; }
+.c2  { background: #f1d37a; border-style: double; border-width: 6px; }
+.c5  { background: radial-gradient(circle, #fff 38%, #e6a94a 40%); }
+.c10 { background: conic-gradient(#e6a94a 0 25%, #f4d58a 0 50%, #e6a94a 0 75%, #f4d58a 0); }
+.note { width: 76px; height: 56px; border-radius: 6px; font-size: 1.3rem; }
+.note::after { content: ""; position: absolute; inset: 3px; border: 2px dashed rgba(31,26,23,.35); border-radius: 3px; pointer-events: none; }
+.n10  { background: repeating-linear-gradient(45deg, #bfe4df 0 8px, #d5f0ec 8px 16px); }
+.n20  { background: radial-gradient(circle, #e88aa0 2px, transparent 3px) 0 0/10px 10px, #f7ccd6; }
+.n50  { background: repeating-linear-gradient(0deg, #f5e29a 0 6px, #fbf0c4 6px 12px); }
+.n100 { background: conic-gradient(#f6c28b 0 25%, #fbdcb8 0 50%, #f6c28b 0 75%, #fbdcb8 0) 0 0/16px 16px; }
+.piece b { background: #fff; border-radius: 8px; padding: 0 6px; line-height: 1.25; border: 1px solid rgba(31,26,23,.25); position: relative; z-index: 1; }
+.piece.glow { box-shadow: 0 0 0 4px var(--glow); }
+.piece.till-chip { margin: 2px; font-size: 1rem; border-width: 2px; }
+.piece.till-chip.coin { width: 44px; height: 44px; }
+.piece.till-chip.note { width: 60px; height: 44px; }
+.piece.till-chip b { padding: 0 4px; }
+.piece.till-chip.c2 { border-width: 5px; }
+.piece:disabled { cursor: default; opacity: .55; }
+.piece.pop { animation: pop .18s ease-out; }
+@keyframes pop { from { transform: scale(.7); } to { transform: scale(1); } }
+
+/* Play screen */
+.play-screen { padding: 0 0 var(--space-4); }
+.play-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; }
+.play-title { margin: 0; font-size: 1.15rem; }
+.customer { display: flex; align-items: center; gap: 10px; padding: 0 12px; min-height: 92px; }
+.customer svg { flex: none; }
+.tag { flex: 1; background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: 6px 10px; }
+.tag .item { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.tag .price { font-size: 1.6rem; font-weight: 800; color: var(--accent); }
+.tag .given { font-size: 1rem; font-weight: 600; margin-top: 2px; }
+.jar { display: flex; justify-content: center; gap: 6px; padding: 4px 12px; }
+.slot { width: 28px; height: 28px; border-radius: 50%; border: 2px dashed var(--till-edge); background: var(--surface); }
+.slot.done { border: 2px solid var(--accent); background: #f1d37a; }
+.slot.now { border: 3px solid var(--accent); }
+.till { margin: 6px 12px; padding: 8px 10px; background: var(--till); border: 3px solid var(--till-edge); border-radius: 14px; min-height: 124px; }
+.till-top { display: flex; justify-content: space-between; align-items: baseline; }
+.till-top .lbl { font-weight: 700; }
+.total { font-size: 2rem; font-weight: 800; line-height: 1.1; }
+.chips { display: flex; flex-wrap: wrap; align-items: center; min-height: 52px; padding: 6px 6px 0; }
+.handback { text-align: center; font-weight: 700; padding: 0 12px; }
+.say { text-align: center; min-height: 30px; font-weight: 700; padding: 0 12px; margin: 4px 0; }
+.say.ok { color: var(--ok); }
+.say.nudge { color: var(--warn); }
+.tray { padding: 0 12px; }
+.tray .lab { font-size: .95rem; color: var(--text-muted); margin: 2px 0; }
+.tray .pieces { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; }
+.actions { display: flex; gap: 8px; padding: 8px 12px 4px; }
+.actions .btn { flex: 1; min-height: 52px; }
+.actions .btn-primary { flex: 2.2; white-space: nowrap; }
+.next-row { padding: 4px 12px 12px; }
+.next-row .btn { width: 100%; }
+
+/* Tutorial */
+.tutorial-screen { padding: 8px 0 var(--space-4); }
+.tutorial-header { display: flex; justify-content: space-between; align-items: center; padding: 0 12px; }
+.tutorial-step { margin: 0; font-weight: 700; }
+.steps-row { display: flex; gap: 6px; margin-top: 4px; }
+.pip-dot { width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--accent); background: var(--surface); }
+.pip-dot.on { background: var(--accent); }
+.pip-dot.past { background: #f1d37a; }
+.guide { display: flex; align-items: center; gap: 8px; padding: 8px 12px; }
+.guide-bubble { flex: 1; background: #fff7e0; border: 2px solid var(--glow); border-radius: 14px; padding: 8px 12px; font-weight: 600; }
+.guide-bubble p { margin: 0; }
+.tutorial-feedback { min-height: 28px; text-align: center; font-weight: 700; margin: 4px 12px; }
+.tutorial-feedback.good { color: var(--ok); }
+.tutorial-feedback.nudge { color: var(--warn); }
+.tutorial-actions { padding: 0 12px; display: grid; gap: 8px; }
+#tut-final { display: grid; gap: 8px; }
+
+/* Result dialog */
+.facts { padding-left: 20px; margin: 0 0 12px; }
+.badge-list { list-style: none; padding: 0; margin: 0 0 12px; }
+.badge-list li { display: inline-block; margin: 2px 4px 2px 0; padding: 2px 10px; border-radius: 999px; border: 2px solid var(--accent); font-weight: 700; font-size: .95rem; }
+
+html.reduce-motion *, html.reduce-motion *::before, html.reduce-motion *::after { animation: none !important; transition: none !important; }
+@media (prefers-reduced-motion: reduce) { .piece.pop { animation: none; } }

@@ -1,5 +1,5 @@
 {
-  "version": "a17bd4a905",
+  "version": "fe01fb552f",
   "files": [
     "./",
     "games/chaturanga/css/style.css",
@@ -13,6 +13,15 @@
     "games/chaturanga/js/engine.js",
     "games/chaturanga/js/pieces.js",
     "games/chaturanga/js/tutorial.js",
+    "games/coin-money-shop/css/style.css",
+    "games/coin-money-shop/game.json",
+    "games/coin-money-shop/icon.svg",
+    "games/coin-money-shop/index.html",
+    "games/coin-money-shop/js/app.js",
+    "games/coin-money-shop/js/engine.js",
+    "games/coin-money-shop/js/items.js",
+    "games/coin-money-shop/js/shop.js",
+    "games/coin-money-shop/js/tutorial.js",
     "games/dots-and-boxes/css/style.css",
     "games/dots-and-boxes/game.json",
     "games/dots-and-boxes/icon.svg",
