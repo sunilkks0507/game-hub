@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Coin and Money Shop: mockup (Step 3)</title>
+<style>
+/* ---- Shared hub tokens (copied from src/shared/tokens.css); this game overrides only the accent ---- */
+:root {
+  --bg: #faf7f2; --surface: #ffffff; --text: #1f1a17; --text-muted: #5c524b; --line: #d9cfc4;
+  --accent: #b45309; --accent-text: #ffffff;
+  --ok: #1b6e3a; --warn: #8a5a00; --danger: #a3221b; --focus: #1d4ed8;
+  --radius: 12px; --space-1: 4px; --space-2: 8px; --space-3: 12px; --space-4: 16px; --space-5: 24px; --space-6: 32px;
+  --tap: 44px;
+  --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  /* Game-only colours: our own, not copied from real currency */
+  --till: #f3e8d6; --till-edge: #8a6f4d; --glow: #ffb300;
+}
+*, *::before, *::after { box-sizing: border-box; }
+body { margin: 0; background: #e6e0d6; color: var(--text); font-family: var(--font); font-size: 16px; line-height: 1.5; padding: 16px; }
+h1.page { font-size: 1.3rem; margin: 0 0 4px; }
+p.lead { margin: 0 0 16px; color: var(--text-muted); max-width: 70ch; }
+.frames { display: flex; flex-wrap: wrap; gap: 24px; align-items: flex-start; }
+figure { margin: 0; }
+figcaption { font-weight: 700; margin-bottom: 6px; max-width: 360px; }
+figcaption small { display: block; font-weight: 400; color: var(--text-muted); }
+.phone { width: 360px; min-height: 640px; background: var(--bg); border: 2px solid #1f1a17; border-radius: 22px; overflow: hidden; position: relative; }
+h1, h2, h3 { line-height: 1.2; margin: 0 0 var(--space-2); }
+p { margin: 0 0 var(--space-3); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; }
+
+/* Buttons (from base.css) */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--tap); min-width: var(--tap); padding: 0 16px;
+  border: 2px solid var(--accent); border-radius: var(--radius); background: var(--surface); color: var(--accent); font: inherit; font-weight: 600; cursor: pointer; }
+.btn-primary { background: var(--accent); color: var(--accent-text); }
+.btn-quiet { border-color: var(--line); color: var(--text); }
+.btn-block { display: flex; width: 100%; }
+.big { min-height: 56px; font-size: 1.1rem; }
+.row { display: flex; gap: 8px; justify-content: center; }
+.row .btn { flex: 1 1 auto; }
+
+/* Title */
+.title-screen { display: flex; flex-direction: column; align-items: center; padding: 28px 16px 24px; text-align: center; }
+.title-screen h1 { font-size: 2rem; margin: 8px 0 4px; }
+.tagline { color: var(--text-muted); margin-bottom: 8px; }
+.goal-sentence { font-size: 1.1rem; font-weight: 600; margin-bottom: 20px; }
+.title-actions { display: grid; gap: 8px; width: 100%; }
+.fine-print { margin-top: 20px; color: var(--text-muted); font-size: 0.95rem; }
+
+/* Level picker */
+.picker { padding: 20px 12px; }
+.levels { display: grid; gap: 10px; margin-top: 12px; }
+.level { display: flex; align-items: center; gap: 12px; min-height: 84px; padding: 10px 12px; text-align: left;
+  border: 3px solid var(--line); border-radius: 16px; background: var(--surface); color: var(--text); font: inherit; font-weight: 700; cursor: pointer; }
+.level[aria-pressed="true"] { border-color: var(--accent); background: #fdf1e3; }
+.level small { display: block; font-weight: 400; color: var(--text-muted); }
+.level .mini { display: flex; gap: 4px; align-items: center; min-width: 92px; justify-content: center; }
+
+/* Pieces: coins are round, notes are wide rectangles; always a big numeral */
+.piece { font: inherit; font-weight: 800; color: var(--text); cursor: pointer; position: relative; display: inline-grid; place-items: center; border: 3px solid var(--till-edge); padding: 0; }
+.coin { width: 64px; height: 64px; border-radius: 50%; font-size: 1.5rem; }
+.coin.sm { width: 56px; height: 56px; font-size: 1.35rem; }
+.c1  { background: #dfe3e8; border-style: solid; }
+.c2  { background: #f1d37a; border-style: double; border-width: 6px; }
+.c5  { background: radial-gradient(circle, #fff 38%, #e6a94a 40%); }
+.c10 { background: conic-gradient(#e6a94a 0 25%, #f4d58a 0 50%, #e6a94a 0 75%, #f4d58a 0); }
+.note { width: 76px; height: 56px; border-radius: 6px; font-size: 1.3rem; }
+.note::after { content: ""; position: absolute; inset: 3px; border: 2px dashed rgba(31,26,23,.35); border-radius: 3px; pointer-events: none; }
+.n10  { background: repeating-linear-gradient(45deg, #bfe4df 0 8px, #d5f0ec 8px 16px); }
+.n20  { background: radial-gradient(circle, #e88aa0 2px, transparent 3px) 0 0/10px 10px, #f7ccd6; }
+.n50  { background: repeating-linear-gradient(0deg, #f5e29a 0 6px, #fbf0c4 6px 12px); }
+.n100 { background: conic-gradient(#f6c28b 0 25%, #fbdcb8 0 50%, #f6c28b 0 75%, #fbdcb8 0) 0 0/16px 16px; }
+.piece b { background: #fff; border-radius: 8px; padding: 0 6px; line-height: 1.25; border: 1px solid rgba(31,26,23,.25); position: relative; z-index: 1; }
+.piece.glow { box-shadow: 0 0 0 4px var(--glow); }
+/* Pieces inside the till are buttons too (tap to take out), so they stay 44px or more */
+.piece.till-chip { margin: 2px; font-size: 1rem; border-width: 2px; }
+.piece.till-chip.coin { width: 44px; height: 44px; }
+.piece.till-chip.note { width: 60px; height: 44px; }
+.piece.till-chip b { padding: 0 4px; }
+.piece.till-chip.c2 { border-width: 5px; }
+
+/* Play screen */
+.play-header { display: flex; align-items: center; justify-content: space-between; padding: 8px 12px; }
+.play-title { margin: 0; font-size: 1.15rem; }
+.customer { display: flex; align-items: center; gap: 10px; padding: 0 12px; min-height: 92px; }
+.customer svg.gilu { flex: none; }
+.tag { flex: 1; background: var(--surface); border: 2px solid var(--line); border-radius: 14px; padding: 6px 10px; }
+.tag .item { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+.tag .price { font-size: 1.6rem; font-weight: 800; color: var(--accent); }
+.tag .given { font-size: 1rem; font-weight: 600; margin-top: 2px; }
+.jar { display: flex; justify-content: center; gap: 6px; padding: 4px 12px; }
+.slot { width: 28px; height: 28px; border-radius: 50%; border: 2px dashed var(--till-edge); background: var(--surface); }
+.slot.done { border: 2px solid var(--accent); background: #f1d37a; }
+.slot.now { border: 3px solid var(--accent); }
+.till { margin: 6px 12px; padding: 8px 10px; background: var(--till); border: 3px solid var(--till-edge); border-radius: 14px; min-height: 124px; }
+.till-top { display: flex; justify-content: space-between; align-items: baseline; }
+.till-top .lbl { font-weight: 700; }
+.total { font-size: 2rem; font-weight: 800; line-height: 1.1; }
+.chips { display: flex; flex-wrap: wrap; align-items: center; min-height: 52px; padding: 6px 6px 0; }
+.say { text-align: center; min-height: 30px; font-weight: 700; padding: 0 12px; }
+.say.ok { color: var(--ok); }
+.tray { padding: 0 12px; }
+.tray .lab { font-size: .95rem; color: var(--text-muted); margin: 2px 0 2px; }
+.tray .pieces { display: flex; gap: 8px; justify-content: center; align-items: center; flex-wrap: wrap; }
+.actions { display: flex; gap: 8px; padding: 8px 12px 12px; }
+.actions .btn { flex: 1; min-height: 52px; }
+.actions .btn-primary { flex: 2.2; white-space: nowrap; }
+
+/* Dialog card */
+.card { margin: 16px 12px; padding: 16px; background: var(--surface); border: 2px solid var(--line); border-radius: 16px; }
+.card h2 { font-size: 1.4rem; }
+.facts { padding-left: 20px; margin: 0 0 12px; }
+.badge { display: inline-block; margin: 2px 4px 2px 0; padding: 2px 10px; border-radius: 999px; border: 2px solid var(--accent); font-weight: 700; font-size: .95rem; }
+.bubble { margin: 0 12px; padding: 8px 12px; background: #fff7e0; border: 2px solid var(--glow); border-radius: 14px; font-weight: 600; }
+.dim { opacity: .4; }
+</style>
+</head>
+<body>
+
+<!-- Inline SVG sprite: original art -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="gilu" viewBox="0 0 80 80">
+    <path d="M62 66c14-4 18-26 6-34-6-4-12 2-8 8 4 4 2 12-6 14z" fill="#b8733a" stroke="#6b3f1d" stroke-width="2.5"/>
+    <circle cx="38" cy="44" r="24" fill="#d58a4a" stroke="#6b3f1d" stroke-width="2.5"/>
+    <circle cx="22" cy="24" r="7" fill="#d58a4a" stroke="#6b3f1d" stroke-width="2.5"/>
+    <circle cx="54" cy="24" r="7" fill="#d58a4a" stroke="#6b3f1d" stroke-width="2.5"/>
+    <ellipse cx="38" cy="50" rx="14" ry="12" fill="#f6dfc0"/>
+    <circle cx="30" cy="40" r="3.4" fill="#1f1a17"/><circle cx="46" cy="40" r="3.4" fill="#1f1a17"/>
+    <circle cx="31" cy="39" r="1.1" fill="#fff"/><circle cx="47" cy="39" r="1.1" fill="#fff"/>
+    <path d="M32 52q6 6 12 0" fill="none" stroke="#6b3f1d" stroke-width="2.5" stroke-linecap="round"/>
+    <ellipse cx="38" cy="47" rx="3" ry="2.2" fill="#6b3f1d"/>
+    <path d="M24 66h28l-3 10H27z" fill="#fff" stroke="#6b3f1d" stroke-width="2.5"/>
+  </symbol>
+  <symbol id="pencil" viewBox="0 0 40 40">
+    <path d="M6 30L28 8l6 6-22 22-8 2z" fill="#f2c94c" stroke="#6b3f1d" stroke-width="2.5" stroke-linejoin="round"/>
+    <path d="M6 30l-2 6 6-2z" fill="#f6dfc0" stroke="#6b3f1d" stroke-width="2"/>
+    <path d="M28 8l6 6 3-3-6-6z" fill="#e88aa0" stroke="#6b3f1d" stroke-width="2.5" stroke-linejoin="round"/>
+  </symbol>
+  <symbol id="biscuit" viewBox="0 0 40 40">
+    <rect x="7" y="6" width="26" height="30" rx="4" fill="#9ad0c8" stroke="#1f5f58" stroke-width="2.5"/>
+    <circle cx="20" cy="21" r="8" fill="#e0a85a" stroke="#6b3f1d" stroke-width="2"/>
+    <circle cx="17" cy="19" r="1.2" fill="#6b3f1d"/><circle cx="23" cy="22" r="1.2" fill="#6b3f1d"/><circle cx="19" cy="25" r="1.2" fill="#6b3f1d"/>
+  </symbol>
+  <symbol id="notebook" viewBox="0 0 40 40">
+    <rect x="8" y="5" width="25" height="31" rx="3" fill="#8fb4e8" stroke="#1d3f7a" stroke-width="2.5"/>
+    <path d="M8 11h-3M8 18h-3M8 25h-3M8 32h-3" stroke="#1d3f7a" stroke-width="2.5" stroke-linecap="round"/>
+    <rect x="14" y="12" width="14" height="8" rx="2" fill="#fff" stroke="#1d3f7a" stroke-width="1.8"/>
+  </symbol>
+  <symbol id="balloon" viewBox="0 0 40 40">
+    <ellipse cx="20" cy="16" rx="11" ry="13" fill="#e8647c" stroke="#7a1d33" stroke-width="2.5"/>
+    <path d="M20 29l-3 4h6z" fill="#e8647c" stroke="#7a1d33" stroke-width="2"/>
+    <path d="M20 33c-4 3 4 3 0 6" fill="none" stroke="#6b3f1d" stroke-width="2"/>
+    <path d="M14 11q2-4 6-4" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round"/>
+  </symbol>
+</svg>
+
+<h1 class="page">Coin and Money Shop: mockup</h1>
+<p class="lead">Step 3 of the workflow. 360px portrait. Coins are round and notes are wide rectangles; each piece is told apart by shape, a big numeral and a pattern, never colour alone. The colours and patterns are our own and do not copy real banknotes. All play is tap; there is no dragging.</p>
+
+<div class="frames">
+
+<!-- 1 Title -->
+<figure>
+  <figcaption>1. Title screen<small>Gilu, goal in one sentence, Play and How to play.</small></figcaption>
+  <div class="phone"><div class="title-screen">
+    <svg width="120" height="120" role="img" aria-label="Gilu the squirrel shopkeeper"><use href="#gilu"/></svg>
+    <h1>Coin and Money Shop</h1>
+    <div class="tagline">Make it exact, give change</div>
+    <p class="goal-sentence">Tap coins and notes to pay the price.</p>
+    <div class="title-actions">
+      <button class="btn btn-primary btn-block big">Play</button>
+      <button class="btn btn-block big">How to play</button>
+      <div class="row"><button class="btn btn-quiet">Sound on</button><button class="btn btn-quiet">Settings</button><button class="btn btn-quiet">Home</button></div>
+    </div>
+    <p class="fine-print">Works offline. Nothing is collected.</p>
+  </div></div>
+</figure>
+
+<!-- 2 Level picker -->
+<figure>
+  <figcaption>2. Level picker<small>Three big buttons, all open, no locks.</small></figcaption>
+  <div class="phone"><div class="picker">
+    <h2>Pick your shop</h2>
+    <div class="levels">
+      <button class="level" aria-pressed="true"><span class="mini" id="m1"></span><span>Coins<small>Make the price with coins. Ages 6-8.</small></span></button>
+      <button class="level" aria-pressed="false"><span class="mini" id="m2"></span><span>Notes<small>Coins and notes up to ₹100. Ages 7-9.</small></span></button>
+      <button class="level" aria-pressed="false"><span class="mini" id="m3"></span><span>Change<small>Give back the right change. Ages 8-10.</small></span></button>
+    </div>
+    <p style="margin-top:16px" class="fine-print">Each day has 8 customers.</p>
+  </div></div>
+</figure>
+
+<!-- 3 Play level 1 -->
+<figure>
+  <figcaption>3. Play, Level 1 Coins<small>Biscuit packet ₹17. Till holds ₹10 + ₹5 = ₹15.</small></figcaption>
+  <div class="phone" id="p3"></div>
+</figure>
+
+<!-- 4 Play level 2 -->
+<figure>
+  <figcaption>4. Play, Level 2 Notes<small>Notebook ₹65. Till holds ₹50 + ₹10 = ₹60. Two tray rows: coins, then notes.</small></figcaption>
+  <div class="phone" id="p4"></div>
+</figure>
+
+<!-- 5 Play level 3 -->
+<figure>
+  <figcaption>5. Play, Level 3 Change<small>Customer hands over ₹50 for ₹37. The change amount is not shown (the child works it out); Hint reveals it.</small></figcaption>
+  <div class="phone" id="p5"></div>
+</figure>
+
+<!-- 6 Tutorial step 2 -->
+<figure>
+  <figcaption>6. Tutorial, step 2 of 4<small>Gilu points at the glowing ₹5 coin. Skippable.</small></figcaption>
+  <div class="phone" id="p6"></div>
+</figure>
+
+<!-- 7 Sale done -->
+<figure>
+  <figcaption>7. A sale completes (Level 1, overpaid)<small>Over sales finish gently: change is shown, nothing is lost.</small></figcaption>
+  <div class="phone" id="p7"></div>
+</figure>
+
+<!-- 8 Day result -->
+<figure>
+  <figcaption>8. Day-end result<small>Says why, with facts from the day. No score, no losing.</small></figcaption>
+  <div class="phone"><div class="card">
+    <svg width="72" height="72" role="img" aria-label="Gilu"><use href="#gilu"/></svg>
+    <h2>You served 8 customers</h2>
+    <ul class="facts">
+      <li>6 paid exactly on the first go.</li>
+      <li>Biggest sale: ₹17, using 3 pieces.</li>
+      <li>You paid ₹10 for ₹7. Change ₹3.</li>
+    </ul>
+    <p><span class="badge">First sale</span><span class="badge">Full day</span><span class="badge">Five in a row</span></p>
+    <div class="levels">
+      <button class="btn btn-primary btn-block big">Play again</button>
+      <div class="row"><button class="btn">Change level</button><button class="btn">How to play</button></div>
+      <button class="btn btn-quiet btn-block">Home</button>
+    </div>
+  </div></div>
+</figure>
+
+</div>
+
+<script>
+// Small helpers so the mockup stays short. The real game renders from the engine state.
+const R = '₹';
+const COIN = { 1: 'c1', 2: 'c2', 5: 'c5', 10: 'c10' };
+const NOTE = { 10: 'n10', 20: 'n20', 50: 'n50', 100: 'n100' };
+function coin(v, extra = '', sm = false) {
+  return `<button class="piece coin ${sm ? 'sm' : ''} ${COIN[v]} ${extra}" aria-label="${v} rupee coin. Tap to add."><b>${R}${v}</b></button>`;
+}
+function note(v, extra = '') {
+  return `<button class="piece note ${NOTE[v]} ${extra}" aria-label="${v} rupee note. Tap to add."><b>${R}${v}</b></button>`;
+}
+function chip(html) { return html.replace('class="piece', 'class="piece till-chip'); }
+function customer({ item, name, price, given, say }) {
+  return `<div class="customer"><svg class="gilu" width="72" height="72" role="img" aria-label="Gilu the shopkeeper"><use href="#gilu"/></svg>
+    <div class="tag"><div class="item"><svg width="36" height="36" aria-hidden="true"><use href="#${item}"/></svg>${name}</div>
+    <div class="price" aria-label="${price} rupees">${given ? 'Price ' : ''}${R}${price}</div>${given ? `<div class="given">Customer gave you ${R}${given}</div>` : ''}</div></div>`;
+}
+function jar(done) {
+  return `<div class="jar" role="img" aria-label="Customer ${done + 1} of 8">${Array.from({ length: 8 }, (_, i) => `<span class="slot ${i < done ? 'done' : i === done ? 'now' : ''}"></span>`).join('')}</div>`;
+}
+function till(label, total, pieces) {
+  return `<div class="till"><div class="till-top"><span class="lbl">${label}</span><span class="total" aria-live="polite" aria-label="${total} rupees">${R}${total}</span></div>
+    <div class="chips">${pieces.join('')}</div></div>`;
+}
+function actions(pay) {
+  return `<div class="actions"><button class="btn btn-quiet">Undo</button><button class="btn btn-quiet">Hint</button><button class="btn btn-primary">${pay}</button></div>`;
+}
+function header(title) {
+  return `<div class="play-header"><button class="btn btn-quiet" aria-label="Home">⌂</button><h1 class="play-title">${title}</h1><button class="btn btn-quiet" aria-label="Rules">?</button></div>`;
+}
+const put = (id, html) => document.getElementById(id).innerHTML = html;
+
+// level picker mini icons
+document.getElementById('m1').innerHTML = `<span class="piece coin sm c1" style="width:36px;height:36px;font-size:.9rem"><b>${R}2</b></span><span class="piece coin sm c5" style="width:36px;height:36px;font-size:.9rem"><b>${R}5</b></span>`;
+document.getElementById('m2').innerHTML = `<span class="piece note n20" style="width:52px;height:38px;font-size:.9rem"><b>${R}20</b></span><span class="piece note n50" style="width:52px;height:38px;font-size:.9rem"><b>${R}50</b></span>`;
+document.getElementById('m3').innerHTML = `<span class="piece note n50" style="width:52px;height:38px;font-size:.9rem"><b>${R}50</b></span><span aria-hidden="true">→</span><span class="piece coin sm c2" style="width:36px;height:36px;font-size:.9rem"><b>${R}2</b></span>`;
+
+// 3 Level 1
+put('p3', header('Coins') + customer({ item: 'biscuit', name: 'Biscuit packet', price: 17 }) + jar(2) +
+  till('Till', 15, [chip(coin(10)), chip(coin(5))]) +
+  `<div class="say">A little more!</div>` +
+  `<div class="tray"><div class="pieces" role="group" aria-label="Coins">${[1, 2, 5, 10].map(v => coin(v)).join('')}</div></div>` +
+  actions('Pay'));
+
+// 4 Level 2
+put('p4', header('Notes') + customer({ item: 'notebook', name: 'Notebook', price: 65 }) + jar(4) +
+  till('Till', 60, [chip(note(50)), chip(note(10))]) +
+  `<div class="say"></div>` +
+  `<div class="tray"><div class="lab">Coins</div><div class="pieces">${coin(5, '', true)}</div>
+   <div class="lab">Notes</div><div class="pieces" role="group" aria-label="Notes">${[10, 20, 50, 100].map(v => note(v)).join('')}</div></div>` +
+  actions('Pay'));
+
+// 5 Level 3
+put('p5', header('Change') + customer({ item: 'pencil', name: 'Pencil', price: 37, given: 50 }) + jar(5) +
+  till('Your change', 12, [chip(note(10)), chip(coin(2, '', true))]) +
+  `<div class="say">A bit more change!</div>` +
+  `<div class="tray"><div class="lab">Coins</div><div class="pieces">${[1, 2, 5].map(v => coin(v, '', true)).join('')}</div>
+   <div class="lab">Notes</div><div class="pieces">${[10, 20, 50].map(v => note(v)).join('')}</div></div>` +
+  actions('Give change'));
+
+// 6 Tutorial step 2
+put('p6', header('How to play') +
+  `<div class="bubble" role="status">Tap the glowing ₹5 coin!</div>` +
+  customer({ item: 'pencil', name: 'Pencil', price: 7 }) + jar(0) +
+  till('Till', 0, []) +
+  `<div class="say"></div>` +
+  `<div class="tray"><div class="pieces">${[1, 2].map(v => coin(v)).join('')}${coin(5, 'glow')}${coin(10)}</div></div>` +
+  `<div class="actions"><button class="btn btn-quiet">Skip</button><button class="btn btn-quiet" disabled>Step 2 of 4</button></div>`);
+
+// 7 Sale done (over)
+put('p7', header('Coins') + customer({ item: 'pencil', name: 'Pencil', price: 7 }) + jar(3) +
+  till('Till', 10, [chip(coin(10))]) +
+  `<div class="say ok" role="status">You paid ₹10 for ₹7. Change ₹3.</div>` +
+  `<div class="tray"><div class="lab" style="text-align:center">Gilu hands back</div><div class="pieces">${coin(2)}${coin(1)}</div></div>` +
+  `<div class="actions"><button class="btn btn-primary big" style="min-height:56px">Next customer</button></div>`);
+</script>
+</body>
+</html>

@@ -90,11 +90,12 @@ A **day** is 8 customers at the chosen level.
 ## 10. Screen flow
 Title (Gilu, name, goal, Play, How to play, sound, Settings, Home) -> first Play runs the tutorial -> Level picker (three big icon buttons: Coins, Notes, Change; remembers the last level; all open, no locks) -> Play (8 customers) -> Day-end result dialog (why, stats, badges, Play again / Change level / How to play / Home).
 Play screen: customer and item with its price tag (Level 3 also shows the note they handed over), the till with its running total, the tray, **Pay** (or **Give change**), Undo, Hint, "?" and Menu. When a sale completes the item moves to the customer, a coin drops into the jar, and a big **Next customer** button appears. No auto-advance; the child sets the pace.
+On Level 3 the till is labelled "Your change" and does **not** show the amount due: the child works out `given - price` from the price tag and the note handed over. Hint reveals it. On Levels 1-2 the till shows only the running total, never the amount still needed, until Hint is used.
 On the first visit to Level 3 a one-card "Giving change" explainer shows once (it is not a tutorial step).
 
 ## 11. Layout and interaction (360px first)
 - Page side padding 12px. Tray buttons are at least 56px high; coins are 64px circles on Levels 1-2 and 56px on Level 3 so six pieces fit; notes are 76px wide by 56px high with 8px gaps, so four notes in a row fit in 336px. All are above the 44px minimum.
-- The till shows pieces as small chips; with 12 pieces they wrap to two rows without scrolling.
+- The till shows each piece as a smaller chip that is still a button: coins 44px, notes 60px by 44px, with 2px gaps (found in the mockup check, where a scaled-down chip fell to 35px). Chips wrap, so the till grows from one row to at most three rows (12 notes) without scrolling the page sideways.
 - Every tray piece and every till piece is a `<button>` with a label: "5 rupee coin. Tap to add." / "20 rupee note. Tap to add." / "Piece 3 in the till, 5 rupee coin. Tap to take it out."
 - Keyboard: Tab to the tray; arrow keys move across it; Enter or Space adds; Backspace or the Undo button removes the last piece; `P` or the Pay button settles.
 - Live region announces "Added 5 rupees. Total 12." and on completion "Paid exactly. 17 rupees." or "Change given. 13 rupees."
