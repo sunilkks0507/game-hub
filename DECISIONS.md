@@ -132,6 +132,35 @@ Three lines each: what, why, date.
   Unlike Pallanguzhi, where the screens were built directly.
   31 Oct 2026
 
+## Fifth game: Coin and Money Shop
+- **Game choice:** Coin and Money Shop (catalogue #25), picked by Claude on Sunil's request for "a word or number maths game", approved by Sunil from a written brief.
+  Strongest unbuilt maths game (25/30, Learn 5, India fit 5); it extends the number games to ages 6-10 with rupees. Runner-ups: Times Table Trail, Word Ladder.
+  1 Nov 2026
+
+- **Category and mascot:** Explorers, ages 6-10, no `alsoIn`. Mascot Gilu, an original squirrel shopkeeper (default, confirm).
+  Pass-the-phone Family mode is left for a later version.
+  1 Nov 2026
+
+- **Levels and trays (default, confirm):** Coins (1, 2, 5, 10; prices Rs 1-20), Notes (coin 5, notes 10, 20, 50, 100; prices Rs 10-100 in fives), Change (customer hands over a note; coins 1, 2, 5, notes 10, 20, 50). Rs 10 is a coin on Level 1 and a note on Levels 2-3.
+  Three levels match the brief; short trays keep tap targets at 56px or more on 360px. All levels open, no locks.
+  1 Nov 2026
+
+- **Overpaying (default, confirm):** on Levels 1-2 the sale completes and the shopkeeper hands back change, but it does not count as exact. On Level 3 giving too much change is not accepted.
+  Overpaying teaches change without a failure state, yet exact payment stays the thing that earns streaks and badges.
+  1 Nov 2026
+
+- **Till limit and no drag:** at most 12 pieces in the till; all play is tap (tap a till piece or Undo to remove). No dragging anywhere, so no tap-alternative is needed.
+  Keeps the till readable on 360px and the game usable by the youngest children.
+  1 Nov 2026
+
+- **Original currency art:** coins are round, notes are wide rectangles with our own colours and patterns, always with a big numeral. Nothing copies a real banknote design.
+  Avoids reproduction questions (RBI rules unverified) and keeps the "original art only" rule. Rupee sign `₹` with a "Rs" fallback if a device lacks the glyph.
+  1 Nov 2026
+
+- **Mockup step kept:** a 360px mockup is built before the engine, because the tray and till layout is the main risk.
+  Same reason as Ten Frame Garden.
+  1 Nov 2026
+
 ## Watching real players
 Notes from watching a new player try each game go here (Step 7 of the workflow).
 
